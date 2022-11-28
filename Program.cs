@@ -171,8 +171,7 @@ namespace Snake
         static void Main(string[] args)
         {
             ResetBoard();
-            DrawBoard();
-            string choice = "";
+            DrawBoard();           
             Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
             th.Start();
             while (true)
