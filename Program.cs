@@ -10,13 +10,14 @@ namespace Snake
 {
     internal class Program
     {
-        public static Snake[,] board = new Snake[50, 50];
+        public static Snake[,] board = new Snake[20, 30];
         public static int direction = 0; //0=north, 1=east, 2=south, 3=west
         public static int score = 0;
         public static int highScore = 0;
         public static string playerName = "";
         public static int snakeSize = 0;
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
+        public static bool active;
 
         public enum Snake
         {
@@ -76,7 +77,7 @@ namespace Snake
                 Console.WriteLine();
             }
         }
-            static void StartMenu()
+        static void StartMenu()
         {
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------");
@@ -90,17 +91,22 @@ namespace Snake
             Console.WriteLine("Press Esc to quit");
 
             keyPress = Console.ReadKey(true);
+
             if (keyPress.Key == ConsoleKey.L)
             {
                 HighScore();
             }
-            if (keyPress.Key == ConsoleKey.H)
+            else if (keyPress.Key == ConsoleKey.H)
             {
                 Help();
             }
-            if (keyPress.Key == ConsoleKey.Escape)
+            else if (keyPress.Key == ConsoleKey.Escape)
             {
                 Environment.Exit(0);
+            }
+            else
+            {
+                active = true;
             }
             Console.WriteLine();
         }
@@ -110,7 +116,7 @@ namespace Snake
             Console.WriteLine("High Score List:");
             Console.WriteLine();
 
-            Console.WriteLine("Press B for back to main manu");
+            Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
             keyPress = Console.ReadKey(true);
             if (keyPress.Key == ConsoleKey.B)
@@ -125,9 +131,9 @@ namespace Snake
         static void Help()
         {
             Console.WriteLine();
-            Console.WriteLine("Hepl Page:");
+            Console.WriteLine("Help Page:");
             Console.WriteLine();
-            Console.WriteLine("Press B for back to main manu");
+            Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
             keyPress = Console.ReadKey(true);
             if (keyPress.Key == ConsoleKey.B)
@@ -142,7 +148,12 @@ namespace Snake
         static void Main(string[] args)
         {
             StartMenu();
-            ResetBoard();
+            if (active = true)
+            {
+                Console.Clear();
+                ResetBoard();
+                DrawBoard();
+            }            
         }
     }
 }
