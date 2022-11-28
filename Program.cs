@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace Snake
 {
@@ -9,7 +9,8 @@ namespace Snake
         public static int score = 0;
         public static int highScore = 0;
         public static string playerName="";
-        
+        public static int snakeSize = 0;
+
         public enum Snake
         {
             Empty,       // 0
@@ -20,9 +21,9 @@ namespace Snake
         }
         public static void ResetBoard()
         {
+            snakeSize= 0;
             score = 0;
             direction = 0;
-            for(int i = 0; i < board.GetLength(0); i++)
             {
                 for(var j = 0; j < board.GetLength(1); j++)
                 {
@@ -70,7 +71,10 @@ namespace Snake
         {
             ResetBoard();
             DrawBoard();
-        string choice="";
+            string choice="";
+
+            string choice="";
+
             do
             {
 
