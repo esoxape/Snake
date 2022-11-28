@@ -166,6 +166,7 @@ namespace Snake
         }
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
             ResetBoard();
             DrawBoard();           
             Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
