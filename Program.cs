@@ -6,6 +6,7 @@
         public static int direction = 0; //0=north, 1=east, 2=south, 3=west
         public static int score = 0;
         public static int highScore = 0;
+        public static string playerName="";
         public enum Snake
         {
             Empty,       // 0
