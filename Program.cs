@@ -7,6 +7,7 @@
         public static int score = 0;
         public static int highScore = 0;
         public static string playerName="";
+        public static int snakeSize = 0;
         public enum Snake
         {
             Empty,       // 0
@@ -17,8 +18,10 @@
         }
         public static void ResetBoard()
         {
+            snakeSize= 0;
             score = 0;
             direction = 0;
+            ///loop to reset the board to starting position
             for(int i = 0; i < 51; i++)
             {
                 for(var j = 0; j < 51; j++)
