@@ -34,6 +34,7 @@
         }
         static void Main(string[] args)
         {
+            ResetBoard();
             string choice="";
             do
             {
