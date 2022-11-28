@@ -20,7 +20,7 @@ namespace Snake
         public static class snake_direction //implement directions
         {
             public static int Up = 0;
-            public static int Rigth = 1;
+            public static int Right = 1;
             public static int Down = 2;
             public static int Left = 3;
         }
@@ -116,7 +116,7 @@ namespace Snake
                         DrawBoard();
                     }
                 }
-                else if (direction == snake_direction.Rigth)
+                else if (direction == snake_direction.Right)
                 {
                     // goto right
                     if (Snake_Head_Position.j == board.GetLength(1)-2)
@@ -190,7 +190,7 @@ namespace Snake
                 }
                 else if (key == ConsoleKey.LeftArrow)
                 {                    
-                    if (direction != snake_direction.Rigth)
+                    if (direction != snake_direction.Right)
                     {
                         direction = snake_direction.Left;
                     }
@@ -199,7 +199,7 @@ namespace Snake
                 {                    
                     if (direction != snake_direction.Left)
                     {
-                        direction = snake_direction.Rigth;
+                        direction = snake_direction.Right;
                     }
                 }
                 else
