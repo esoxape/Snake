@@ -71,12 +71,52 @@ namespace Snake
                     if (board[i, j] == Snake.Fruit)
                     {
                         Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
+                {
+                    for (var j = 0; j < board.GetLength(1); j++)
+                    {
+                        if (i == 0 || i == board.GetLength(0) - 1 || j == 0 || j == board.GetLength(1) - 1) board[i, j] = Snake.Wall;
+                        else if (i == 5 && j == 5) board[i, j] = Snake.Head;
+                        else if (i == 10 && j == 10) board[i, j] = Snake.Fruit;
+                        else board[i, j] = Snake.Empty;
+
                     }
                 }
                 Console.WriteLine();
             }
         }
-        static void StartMenu()
+        public static void DrawBoard()
+        {
+            Console.WriteLine($"Player name: {playerName}");
+            Console.WriteLine($"score: {score}");
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i, j] == Snake.Empty)
+                    {
+                        Console.Write(' ');
+                    }
+                    if (board[i, j] == Snake.Wall)
+                    {
+                        Console.Write("@", Console.ForegroundColor = ConsoleColor.Magenta);
+                    }
+                    if (board[i, j] == Snake.Head)
+                    {
+                        Console.Write("O", Console.ForegroundColor = ConsoleColor.Green);
+                    }
+                    if (board[i, j] == Snake.Body)
+                    {
+                        Console.Write("o", Console.ForegroundColor = ConsoleColor.DarkGreen);
+                    }
+                    if (board[i, j] == Snake.Fruit)
+                    {
+                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+            static void StartMenu()
         {
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------");
@@ -153,6 +193,8 @@ namespace Snake
                 ResetBoard();
                 DrawBoard();
             }
+            ResetBoard();
+
         }
     }
 }
