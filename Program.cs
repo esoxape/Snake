@@ -25,13 +25,17 @@ namespace Snake
             score = 0;
             direction = 0;
             {
-                for(var j = 0; j < board.GetLength(1); j++)
+                for(int i = 0; i < board.GetLength(0); i++)
                 {
-                    if (i == 0 || i == board.GetLength(0)-1 || j==0|| j == board.GetLength(1)-1) board[i, j] = Snake.Wall;
-                    else if (i==5 && j==5) board[i, j] = Snake.Head;
-                    else if(i==10 && j==10) board[i, j] = Snake.Fruit;
-                    else board[i, j] = Snake.Empty;                    
+                    for (var j = 0; j < board.GetLength(1); j++)
+                    {
+                        if (i == 0 || i == board.GetLength(0) - 1 || j == 0 || j == board.GetLength(1) - 1) board[i, j] = Snake.Wall;
+                        else if (i == 5 && j == 5) board[i, j] = Snake.Head;
+                        else if (i == 10 && j == 10) board[i, j] = Snake.Fruit;
+                        else board[i, j] = Snake.Empty;
+                    }
                 }
+                
             }
         }
         public static void DrawBoard()
@@ -71,8 +75,6 @@ namespace Snake
         {
             ResetBoard();
             DrawBoard();
-            string choice="";
-
             string choice="";
 
             do
