@@ -115,6 +115,7 @@ namespace Snake
         {
             Position M = new Position(Snake_Head_Position.i, Snake_Head_Position.j);
             mySnake.positions.Add(M);
+            if(mySnake.positions.Count == 1) mySnake.positions.Add(M);
             score = score+10;
         }
         public static void BodyMove()
@@ -125,20 +126,19 @@ namespace Snake
                 {
                     if (board[i,j] == Snake.Body)board[i,j] = Snake.Empty;
                 }
-            }
-            
-            
-            for (int i = 0; i < mySnake.positions.Count; i++)
-            {
-                if(board[mySnake.positions[i].i, mySnake.positions[i].j]!=Snake.Head) board[mySnake.positions[i].i, mySnake.positions[i].j] = Snake.Body;
-            }
+            }                   
 
             for (int i = 0; i < mySnake.positions.Count; i++)
             {
-                if (i + 1 < mySnake.positions.Count)
+                if (board[mySnake.positions[i].i, mySnake.positions[i].j] != Snake.Head) board[mySnake.positions[i].i, mySnake.positions[i].j] = Snake.Body;
+            }
+
+            for (int i = mySnake.positions.Count-1; i > -1; i--)
+            {
+                if (i > 1)
                 {
-                    mySnake.positions[i].i = mySnake.positions[i + 1].i;
-                    mySnake.positions[i].j = mySnake.positions[i + 1].j;
+                    mySnake.positions[i].i = mySnake.positions[i - 1].i;
+                    mySnake.positions[i].j = mySnake.positions[i - 1].j;
                 }
                 else
                 {
