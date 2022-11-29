@@ -1,3 +1,5 @@
+using System;
+
 namespace Snake
 {
     internal class Program
@@ -9,6 +11,8 @@ namespace Snake
         public static string playerName = "";
         public static int snakeSize = 0;
         public static int Speed = 2; //speed of snake movement (lower to increase speed)
+        public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
+        public static bool active;
         public enum Snake
         {
             Empty,       // 0
@@ -162,6 +166,74 @@ namespace Snake
                     }
                 }
                 Thread.Sleep(Speed * 250); //apply speed
+            }
+        }
+        static void StartMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("---------------------------------------------");
+            Console.WriteLine("--------------Welcome to snake---------------");
+            Console.WriteLine("---------------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Press any key to play");
+            Console.WriteLine();
+            Console.WriteLine("Press L to high score list");
+            Console.WriteLine("Press H to help");
+            Console.WriteLine("Press Esc to quit");
+
+            keyPress = Console.ReadKey(true);
+
+            if (keyPress.Key == ConsoleKey.L)
+            {
+                HighScore();
+            }
+            else if (keyPress.Key == ConsoleKey.H)
+            {
+                Help();
+            }
+            else if (keyPress.Key == ConsoleKey.Escape)
+            {
+                Environment.Exit(0);
+            }
+            else
+            {
+                active = true;
+            }
+            Console.WriteLine();
+        }
+        static void HighScore()
+        {
+            Console.WriteLine();
+            Console.WriteLine("High Score List:");
+            Console.WriteLine();
+
+            Console.WriteLine("Press B for back to main menu");
+            Console.WriteLine("Press Esc to quit");
+            keyPress = Console.ReadKey(true);
+            if (keyPress.Key == ConsoleKey.B)
+            {
+                StartMenu();
+            }
+            if (keyPress.Key == ConsoleKey.Escape)
+            {
+                Environment.Exit(0);
+            }
+        }
+        static void Help()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Hepl Page:");
+            Console.WriteLine();
+            Console.WriteLine("Press B for back to main menu");
+            Console.WriteLine("Press Esc to quit");
+            keyPress = Console.ReadKey(true);
+            if (keyPress.Key == ConsoleKey.B)
+            {
+                StartMenu();
+            }
+            if (keyPress.Key == ConsoleKey.Escape)
+            {
+                Environment.Exit(0);
             }
         }
         static void Main(string[] args)
