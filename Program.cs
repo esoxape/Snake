@@ -15,7 +15,7 @@ namespace Snake
         public static int highScore = 0;
         public static string playerName = "";
         public static int snakeSize = 0;
-        public static int Speed = 2; //speed of snake movement (lower to increase speed)
+        public static int Speed = 1; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
         public static bool active;        
         public enum Snake
@@ -161,7 +161,7 @@ namespace Snake
                         if (board[Snake_Head_Position.i, Snake_Head_Position.j] ==Snake.Fruit)
                         {
                             BodyAdd();
-                        }
+                        }                        
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
                         Fruit();
                         BodyMove();
