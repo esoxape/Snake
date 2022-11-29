@@ -13,11 +13,13 @@ namespace Snake
         public static int direction = 1; //0=north-up, 1=east-right, 2=south-down, 3=west-left
         public static int score = 0;
         public static int highScore = 0;
+        public static string highScoreName = "";
         public static string playerName = "";
         public static int snakeSize = 0;
         public static int Speed = 1; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
-        public static bool active;        
+        public static bool active=true;
+        public static bool activePlay = true;
         public enum Snake
         {
             Empty,       // 0
@@ -145,6 +147,15 @@ namespace Snake
                 }
             }
         }
+        public static void Score()
+        {
+            active = false;
+            if (score > highScore)
+            {
+                highScore = score;
+                highScoreName = playerName;
+            }
+        }
         public static void start_thread() //auto movement implement using thread method
         {
             while (true)
@@ -153,19 +164,23 @@ namespace Snake
                 {
                     // goto UP
                     if (Snake_Head_Position.i == 1)
-                    {                        
+                    {
+                        Score();
                         break;
                     }
                     else
                     {
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.i--;
-                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] ==Snake.Fruit)
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
                         {
-                            BodyAdd();                           
+                            BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        {
+                            Score();
                             break;
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
                         Fruit();
                         BodyMove();
@@ -176,7 +191,8 @@ namespace Snake
                 {
                     // goto right
                     if (Snake_Head_Position.j == board.GetLength(1)-2)
-                    {                        
+                    {
+                        Score();
                         break;
                     }
                     else
@@ -188,7 +204,10 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        {
+                            Score();
                             break;
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
                         BodyMove();
@@ -199,7 +218,8 @@ namespace Snake
                 {
                     // goto down
                     if (Snake_Head_Position.i == board.GetLength(0)-2)
-                    {                        
+                    {
+                        Score();
                         break;
                     }
                     else
@@ -211,7 +231,10 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        {
+                            Score();
                             break;
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
                         BodyMove();
@@ -222,7 +245,8 @@ namespace Snake
                 {
                     // goto left
                     if (Snake_Head_Position.j == 1)
-                    {                        
+                    {
+                        Score();
                         break;
                     }
                     else
@@ -234,7 +258,10 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        {
+                            Score();
                             break;
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
                         BodyMove();
@@ -246,6 +273,7 @@ namespace Snake
         }
         static void StartMenu()
         {
+            Console.Clear();
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------");
             Console.WriteLine("--------------Welcome to snake---------------");
@@ -284,9 +312,10 @@ namespace Snake
         }
         static void HighScore()
         {
+            Console.Clear();
             Console.WriteLine();
             Console.WriteLine("High Score List:");
-            Console.WriteLine();
+            Console.WriteLine($"{highScoreName} {highScore}");
             Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
             keyPress = Console.ReadKey(true);
@@ -301,8 +330,9 @@ namespace Snake
         }
         static void Help()
         {
+            Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("Hepl Page:");
+            Console.WriteLine("Help Page:");
             Console.WriteLine();
             Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
@@ -346,14 +376,14 @@ namespace Snake
         static void Main(string[] args)
         {
             StartMenu();
-            if (active == true)
+            do
             {
                 Console.CursorVisible = false;
                 ResetBoard();
                 DrawBoard();
                 Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
                 th.Start();
-                while (true)
+                while (active==true)
                 {
                     var key = Console.ReadKey().Key; // Read Key From Console
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
@@ -384,11 +414,11 @@ namespace Snake
                         {
                             direction = snake_direction.Right;
                         }
-                    }
+                    }                    
                 }
-                Console.WriteLine("Thanks For Playing");
-                Console.ReadLine();
-            }
+                StartMenu();
+            } while (activePlay == true);
+            
         }
     }
 }
