@@ -17,7 +17,7 @@ namespace Snake
         public static int snakeSize = 0;
         public static int Speed = 2; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
-        public static bool active;
+        public static bool active;        
         public enum Snake
         {
             Empty,       // 0
@@ -35,15 +35,17 @@ namespace Snake
         }
         public class Position //body implement (imorgon)
         {
-            public int i { get; set; }
-            public int j { get; set; }
+            public int i;
+            public int j;
+            public Position(int i, int j)
+            {
+                this.i = i;
+                this.j = j;
+            }
         }
         public static class mySnake //body implement (imorgon)
         {
             public static List<Position> positions = new List<Position>();
-            public static void Increase(int i, int j)
-            {
-            }
         }
         public static class Snake_Head_Position //implement i,j
         {
@@ -106,6 +108,41 @@ namespace Snake
                 Console.WriteLine();
             }
         }
+        public static void BodyAdd()
+        {
+            Position M = new Position(Snake_Head_Position.i, Snake_Head_Position.j);
+            mySnake.positions.Add(M);            
+        }
+        public static void BodyMove()
+        {
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (var j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i,j] == Snake.Body)board[i,j] = Snake.Empty;
+                }
+            }
+            
+            
+            for (int i = 0; i < mySnake.positions.Count; i++)
+            {
+                if(board[mySnake.positions[i].i, mySnake.positions[i].j]!=Snake.Head) board[mySnake.positions[i].i, mySnake.positions[i].j] = Snake.Body;
+            }
+
+            for (int i = 0; i < mySnake.positions.Count; i++)
+            {
+                if (i + 1 < mySnake.positions.Count)
+                {
+                    mySnake.positions[i].i = mySnake.positions[i + 1].i;
+                    mySnake.positions[i].j = mySnake.positions[i + 1].j;
+                }
+                else
+                {
+                    mySnake.positions[i].i = Snake_Head_Position.i;
+                    mySnake.positions[i].j = Snake_Head_Position.j;
+                }
+            }
+        }
         public static void start_thread() //auto movement implement using thread method
         {
             while (true)
@@ -121,8 +158,13 @@ namespace Snake
                     {
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.i--;
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] ==Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
                         Fruit();
+                        BodyMove();
                         DrawBoard();
                     }
                 }
@@ -137,8 +179,13 @@ namespace Snake
                     {
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.j++;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
+                        BodyMove();
                         DrawBoard();
                     }
                 }
@@ -153,8 +200,13 @@ namespace Snake
                     {
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.i++;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
+                        BodyMove();
                         DrawBoard();
                     }
                 }
@@ -169,8 +221,13 @@ namespace Snake
                     {
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.j--;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
+                        BodyMove();
                         DrawBoard();
                     }
                 }
