@@ -155,6 +155,9 @@ namespace Snake
                 highScore = score;
                 highScoreName = playerName;
             }
+            ResetBoard();
+            mySnake.positions.Clear();
+            Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
         }
         public static void start_thread() //auto movement implement using thread method
         {
@@ -377,11 +380,11 @@ namespace Snake
         }
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
             StartMenu();
+            ResetBoard();
             do
-            {
-                Console.CursorVisible = false;
-                ResetBoard();
+            {                               
                 DrawBoard();
                 Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
                 th.Start();
