@@ -78,6 +78,7 @@ namespace Snake
         public static void DrawBoard()
         {
             Console.Clear();
+            Console.ResetColor();
             Console.WriteLine($"Player name: {playerName}");
             Console.WriteLine($"score: {score}");
             for (int i = 0; i < board.GetLength(0); i++)
@@ -111,7 +112,8 @@ namespace Snake
         public static void BodyAdd()
         {
             Position M = new Position(Snake_Head_Position.i, Snake_Head_Position.j);
-            mySnake.positions.Add(M);            
+            mySnake.positions.Add(M);
+            score = score+10;
         }
         public static void BodyMove()
         {
@@ -160,7 +162,7 @@ namespace Snake
                         Snake_Head_Position.i--;
                         if (board[Snake_Head_Position.i, Snake_Head_Position.j] ==Snake.Fruit)
                         {
-                            BodyAdd();
+                            BodyAdd();                           
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
                             break;
@@ -249,14 +251,12 @@ namespace Snake
             Console.WriteLine("--------------Welcome to snake---------------");
             Console.WriteLine("---------------------------------------------");
             Console.WriteLine();
-            Console.WriteLine("Press any key to play");
+            Console.WriteLine("Press P to play");
             Console.WriteLine();
             Console.WriteLine("Press L to high score list");
             Console.WriteLine("Press H to help");
             Console.WriteLine("Press Esc to quit");
-
             keyPress = Console.ReadKey(true);
-
             if (keyPress.Key == ConsoleKey.L)
             {
                 HighScore();
@@ -269,18 +269,24 @@ namespace Snake
             {
                 Environment.Exit(0);
             }
-            else
+            else if (keyPress.Key == ConsoleKey.P)
             {
-                active = true;
+                PlayerName();
             }
             Console.WriteLine();
+        }
+        static void PlayerName()
+        {
+            Console.Clear();
+            Console.Write("Your name: ");
+            playerName = Console.ReadLine();
+            active = true;
         }
         static void HighScore()
         {
             Console.WriteLine();
             Console.WriteLine("High Score List:");
             Console.WriteLine();
-
             Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
             keyPress = Console.ReadKey(true);
@@ -339,49 +345,50 @@ namespace Snake
         }
         static void Main(string[] args)
         {
-            Console.CursorVisible = false;
-            ResetBoard();
-            DrawBoard();           
-            Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
-            th.Start();
-            while (true)
+            StartMenu();
+            if (active == true)
             {
-                var key = Console.ReadKey().Key; // Read Key From Console
-                // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
-                if (key == ConsoleKey.UpArrow)
-                {                    
-                    if (direction != snake_direction.Down)
-                    {
-                        direction = snake_direction.Up;
-                    }
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {                    
-                    if (direction != snake_direction.Up)
-                    {
-                        direction = snake_direction.Down;
-                    }
-                }
-                else if (key == ConsoleKey.LeftArrow)
-                {                    
-                    if (direction != snake_direction.Right)
-                    {
-                        direction = snake_direction.Left;
-                    }
-                }
-                else if (key == ConsoleKey.RightArrow)
-                {                    
-                    if (direction != snake_direction.Left)
-                    {
-                        direction = snake_direction.Right;
-                    }
-                }
-                else
+                Console.CursorVisible = false;
+                ResetBoard();
+                DrawBoard();
+                Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
+                th.Start();
+                while (true)
                 {
+                    var key = Console.ReadKey().Key; // Read Key From Console
+                                                     // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
+                    if (key == ConsoleKey.UpArrow)
+                    {
+                        if (direction != snake_direction.Down)
+                        {
+                            direction = snake_direction.Up;
+                        }
+                    }
+                    else if (key == ConsoleKey.DownArrow)
+                    {
+                        if (direction != snake_direction.Up)
+                        {
+                            direction = snake_direction.Down;
+                        }
+                    }
+                    else if (key == ConsoleKey.LeftArrow)
+                    {
+                        if (direction != snake_direction.Right)
+                        {
+                            direction = snake_direction.Left;
+                        }
+                    }
+                    else if (key == ConsoleKey.RightArrow)
+                    {
+                        if (direction != snake_direction.Left)
+                        {
+                            direction = snake_direction.Right;
+                        }
+                    }
                 }
+                Console.WriteLine("Thanks For Playing");
+                Console.ReadLine();
             }
-            Console.WriteLine("Thanks For Playing");
-            Console.ReadLine();
         }
     }
 }
