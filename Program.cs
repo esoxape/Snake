@@ -273,6 +273,7 @@ namespace Snake
         }
         static void StartMenu()
         {
+            start:
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------");
@@ -301,6 +302,7 @@ namespace Snake
             {
                 PlayerName();
             }
+            else goto start;
             Console.WriteLine();
         }
         static void PlayerName()
