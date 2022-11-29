@@ -122,6 +122,7 @@ namespace Snake
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.i--;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
                         DrawBoard();
                     }
                 }
@@ -137,6 +138,7 @@ namespace Snake
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.j++;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
                         DrawBoard();
                     }
                 }
@@ -152,6 +154,7 @@ namespace Snake
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.i++;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
                         DrawBoard();
                     }
                 }
@@ -167,6 +170,7 @@ namespace Snake
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
                         Snake_Head_Position.j--;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
                         DrawBoard();
                     }
                 }
@@ -240,6 +244,33 @@ namespace Snake
             {
                 Environment.Exit(0);
             }
+        }
+        static void Fruit()
+        {
+            Random random = new Random();
+            bool check = true;
+            int[,] array = new int[10000,2];
+            int counter = 0;
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (var j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i,j]==Snake.Fruit) check = false;
+                    if(board[i,j]==Snake.Empty)
+                    {
+                        array[counter, 0] = i;                        
+                        array[counter, 1] = j;
+                        counter++;
+                    }
+                }
+            }
+
+            if (check == true)
+            {
+                int rng = random.Next(counter);
+                board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
+            }
+            
         }
         static void Main(string[] args)
         {
