@@ -161,7 +161,9 @@ namespace Snake
                         if (board[Snake_Head_Position.i, Snake_Head_Position.j] ==Snake.Fruit)
                         {
                             BodyAdd();
-                        }                        
+                        }
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                            break;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
                         Fruit();
                         BodyMove();
@@ -183,6 +185,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                            break;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
                         BodyMove();
@@ -204,6 +208,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                            break;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
                         BodyMove();
@@ -225,6 +231,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                            break;
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
                         BodyMove();
