@@ -15,9 +15,10 @@ namespace Snake
         public static int highScore = 0;
         public static string playerName = "";
         public static int snakeSize = 0;
-        public static int Speed = 2; //speed of snake movement (lower to increase speed)
+        public static int Speed = 1; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
-        public static bool active;
+        public static bool active;  
+
         public enum Snake
         {
             Empty,       // 0
@@ -35,15 +36,17 @@ namespace Snake
         }
         public class Position //body implement (imorgon)
         {
-            public int i { get; set; }
-            public int j { get; set; }
+            public int i;
+            public int j;
+            public Position(int i, int j)
+            {
+                this.i = i;
+                this.j = j;
+            }
         }
         public static class mySnake //body implement (imorgon)
         {
             public static List<Position> positions = new List<Position>();
-            public static void Increase(int i, int j)
-            {
-            }
         }
         public static class Snake_Head_Position //implement i,j
         {
@@ -69,8 +72,10 @@ namespace Snake
                         }
                         else if (i == 10 && j == 10) board[i, j] = Snake.Fruit;
                         else board[i, j] = Snake.Empty;
+
                     }
                 }
+                Console.WriteLine();
             }
         }
         public static void DrawBoard()
@@ -101,49 +106,135 @@ namespace Snake
                     if (board[i, j] == Snake.Fruit)
                     {
                         Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
-                {
-                    for (var j = 0; j < board.GetLength(1); j++)
-                    {
-                        if (i == 0 || i == board.GetLength(0) - 1 || j == 0 || j == board.GetLength(1) - 1) board[i, j] = Snake.Wall;
-                        else if (i == 5 && j == 5) board[i, j] = Snake.Head;
-                        else if (i == 10 && j == 10) board[i, j] = Snake.Fruit;
-                        else board[i, j] = Snake.Empty;
-
                     }
                 }
                 Console.WriteLine();
             }
         }
-        public static void DrawBoard()
+        public static void BodyAdd()
         {
-            Console.WriteLine($"Player name: {playerName}");
-            Console.WriteLine($"score: {score}");
+            Position M = new Position(Snake_Head_Position.i, Snake_Head_Position.j);
+            mySnake.positions.Add(M);            
+        }
+        public static void BodyMove()
+        {
             for (int i = 0; i < board.GetLength(0); i++)
             {
-                for (int j = 0; j < board.GetLength(1); j++)
+                for (var j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j] == Snake.Empty)
-                    {
-                        Console.Write(' ');
+                    if (board[i,j] == Snake.Body)board[i,j] = Snake.Empty;
+                }
+            }
+            
+            
+            for (int i = 0; i < mySnake.positions.Count; i++)
+            {
+                if(board[mySnake.positions[i].i, mySnake.positions[i].j]!=Snake.Head) board[mySnake.positions[i].i, mySnake.positions[i].j] = Snake.Body;
+            }
+
+            for (int i = 0; i < mySnake.positions.Count; i++)
+            {
+                if (i + 1 < mySnake.positions.Count)
+                {
+                    mySnake.positions[i].i = mySnake.positions[i + 1].i;
+                    mySnake.positions[i].j = mySnake.positions[i + 1].j;
+                }
+                else
+                {
+                    mySnake.positions[i].i = Snake_Head_Position.i;
+                    mySnake.positions[i].j = Snake_Head_Position.j;
+                }
+            }
+        }
+        public static void start_thread() //auto movement implement using thread method
+        {
+            while (true)
+            {
+                if (direction == snake_direction.Up)
+                {
+                    // goto UP
+                    if (Snake_Head_Position.i == 1)
+                    {                        
+                        break;
                     }
-                    if (board[i, j] == Snake.Wall)
+                    else
                     {
-                        Console.Write("@", Console.ForegroundColor = ConsoleColor.Magenta);
-                    }
-                    if (board[i, j] == Snake.Head)
-                    {
-                        Console.Write("O", Console.ForegroundColor = ConsoleColor.Green);
-                    }
-                    if (board[i, j] == Snake.Body)
-                    {
-                        Console.Write("o", Console.ForegroundColor = ConsoleColor.DarkGreen);
-                    }
-                    if (board[i, j] == Snake.Fruit)
-                    {
-                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
+                        Snake_Head_Position.i--;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] ==Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }                        
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
+                        Fruit();
+                        BodyMove();
+                        DrawBoard();
                     }
                 }
-                Console.WriteLine();
+                else if (direction == snake_direction.Right)
+                {
+                    // goto right
+                    if (Snake_Head_Position.j == board.GetLength(1)-2)
+                    {                        
+                        break;
+                    }
+                    else
+                    {
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
+                        Snake_Head_Position.j++;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
+                        BodyMove();
+                        DrawBoard();
+                    }
+                }
+                else if (direction == snake_direction.Down)
+                {
+                    // goto down
+                    if (Snake_Head_Position.i == board.GetLength(0)-2)
+                    {                        
+                        break;
+                    }
+                    else
+                    {
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
+                        Snake_Head_Position.i++;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
+                        BodyMove();
+                        DrawBoard();
+                    }
+                }
+                else if (direction == snake_direction.Left)
+                {
+                    // goto left
+                    if (Snake_Head_Position.j == 1)
+                    {                        
+                        break;
+                    }
+                    else
+                    {
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
+                        Snake_Head_Position.j--;
+                        if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Fruit)
+                        {
+                            BodyAdd();
+                        }
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
+                        Fruit();
+                        BodyMove();
+                        DrawBoard();
+                    }
+                }
+                Thread.Sleep(Speed * 250); //apply speed
             }
         }
         static void StartMenu()
@@ -218,16 +309,18 @@ namespace Snake
         {
             Random random = new Random();
             bool check = true;
-            int[,] array = new int[10000, 2];
+
+            int[,] array = new int[10000,2]
             int counter = 0;
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (var j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j] == Snake.Fruit) check = false;
-                    if (board[i, j] == Snake.Empty)
+
+                    if (board[i,j]==Snake.Fruit) check = false;
+                    if(board[i,j]==Snake.Empty)
                     {
-                        array[counter, 0] = i;
+                        array[counter, 0] = i;                    
                         array[counter, 1] = j;
                         counter++;
                     }
@@ -236,21 +329,56 @@ namespace Snake
 
             if (check == true)
             {
-                score += 10;
                 int rng = random.Next(counter);
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
             }
-
+            
         }
         static void Main(string[] args)
         {
-            StartMenu();
-            if (active = true)
+            Console.CursorVisible = false;
+            ResetBoard();
+            DrawBoard();           
+            Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
+            th.Start();
+            while (true)
             {
-                Console.Clear();
-                ResetBoard();
-                DrawBoard();
+                var key = Console.ReadKey().Key; // Read Key From Console
+                // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
+                if (key == ConsoleKey.UpArrow)
+                {                    
+                    if (direction != snake_direction.Down)
+                    {
+                        direction = snake_direction.Up;
+                    }
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {                    
+                    if (direction != snake_direction.Up)
+                    {
+                        direction = snake_direction.Down;
+                    }
+                }
+                else if (key == ConsoleKey.LeftArrow)
+                {                    
+                    if (direction != snake_direction.Right)
+                    {
+                        direction = snake_direction.Left;
+                    }
+                }
+                else if (key == ConsoleKey.RightArrow)
+                {                    
+                    if (direction != snake_direction.Left)
+                    {
+                        direction = snake_direction.Right;
+                    }
+                }
+                else
+                {
+                }
             }
+            Console.WriteLine("Thanks For Playing");
+            Console.ReadLine();
         }
     }
 }
