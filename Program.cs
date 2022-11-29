@@ -20,6 +20,7 @@ namespace Snake
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
         public static bool active=true;
         public static bool activePlay = true;
+        public static int lastDirection = 0;
         public enum Snake
         {
             Empty,       // 0
@@ -163,6 +164,7 @@ namespace Snake
         {
             while (true)
             {
+                lastDirection = 0;
                 if (direction == snake_direction.Up)
                 {
                     // goto UP
@@ -384,40 +386,44 @@ namespace Snake
             StartMenu();
             ResetBoard();
             do
-            {                               
+            {                
                 DrawBoard();
                 Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
-                th.Start();
+                th.Start();                
                 while (active==true)
                 {
                     var key = Console.ReadKey().Key; // Read Key From Console
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
                     if (key == ConsoleKey.UpArrow)
                     {
-                        if (direction != snake_direction.Down)
+                        if (direction != snake_direction.Down && lastDirection==0)
                         {
                             direction = snake_direction.Up;
+                            lastDirection = 1;
                         }
                     }
                     else if (key == ConsoleKey.DownArrow)
                     {
-                        if (direction != snake_direction.Up)
+                        if (direction != snake_direction.Up && lastDirection == 0)
                         {
                             direction = snake_direction.Down;
+                            lastDirection = 1;
                         }
                     }
                     else if (key == ConsoleKey.LeftArrow)
                     {
-                        if (direction != snake_direction.Right)
+                        if (direction != snake_direction.Right && lastDirection == 0)
                         {
                             direction = snake_direction.Left;
+                            lastDirection = 1;
                         }
                     }
                     else if (key == ConsoleKey.RightArrow)
                     {
-                        if (direction != snake_direction.Left)
+                        if (direction != snake_direction.Left && lastDirection == 0)
                         {
                             direction = snake_direction.Right;
+                            lastDirection = 1;
                         }
                     }                    
                 }
