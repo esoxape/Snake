@@ -101,80 +101,49 @@ namespace Snake
                     if (board[i, j] == Snake.Fruit)
                     {
                         Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
+                {
+                    for (var j = 0; j < board.GetLength(1); j++)
+                    {
+                        if (i == 0 || i == board.GetLength(0) - 1 || j == 0 || j == board.GetLength(1) - 1) board[i, j] = Snake.Wall;
+                        else if (i == 5 && j == 5) board[i, j] = Snake.Head;
+                        else if (i == 10 && j == 10) board[i, j] = Snake.Fruit;
+                        else board[i, j] = Snake.Empty;
+
                     }
                 }
                 Console.WriteLine();
             }
         }
-        public static void start_thread() //auto movement implement using thread method
+        public static void DrawBoard()
         {
-            while (true)
+            Console.WriteLine($"Player name: {playerName}");
+            Console.WriteLine($"score: {score}");
+            for (int i = 0; i < board.GetLength(0); i++)
             {
-                if (direction == snake_direction.Up)
+                for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    // goto UP
-                    if (Snake_Head_Position.i == 1)
+                    if (board[i, j] == Snake.Empty)
                     {
-                        break;
+                        Console.Write(' ');
                     }
-                    else
+                    if (board[i, j] == Snake.Wall)
                     {
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
-                        Snake_Head_Position.i--;
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
-                        Fruit();
-                        DrawBoard();
+                        Console.Write("@", Console.ForegroundColor = ConsoleColor.Magenta);
+                    }
+                    if (board[i, j] == Snake.Head)
+                    {
+                        Console.Write("O", Console.ForegroundColor = ConsoleColor.Green);
+                    }
+                    if (board[i, j] == Snake.Body)
+                    {
+                        Console.Write("o", Console.ForegroundColor = ConsoleColor.DarkGreen);
+                    }
+                    if (board[i, j] == Snake.Fruit)
+                    {
+                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
                     }
                 }
-                else if (direction == snake_direction.Right)
-                {
-                    // goto right
-                    if (Snake_Head_Position.j == board.GetLength(1) - 2)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
-                        Snake_Head_Position.j++;
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
-                        Fruit();
-                        DrawBoard();
-                    }
-                }
-                else if (direction == snake_direction.Down)
-                {
-                    // goto down
-                    if (Snake_Head_Position.i == board.GetLength(0) - 2)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
-                        Snake_Head_Position.i++;
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
-                        Fruit();
-                        DrawBoard();
-                    }
-                }
-                else if (direction == snake_direction.Left)
-                {
-                    // goto left
-                    if (Snake_Head_Position.j == 1)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Empty;
-                        Snake_Head_Position.j--;
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
-                        Fruit();
-                        DrawBoard();
-                    }
-                }
-                Thread.Sleep(Speed * 250); //apply speed
+                Console.WriteLine();
             }
         }
         static void StartMenu()
@@ -275,49 +244,13 @@ namespace Snake
         }
         static void Main(string[] args)
         {
-            Console.CursorVisible = false;
-            ResetBoard();
-            DrawBoard();
-            Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
-            th.Start();
-            while (true)
+            StartMenu();
+            if (active = true)
             {
-                var key = Console.ReadKey().Key; // Read Key From Console
-                // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
-                if (key == ConsoleKey.UpArrow)
-                {
-                    if (direction != snake_direction.Down)
-                    {
-                        direction = snake_direction.Up;
-                    }
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {
-                    if (direction != snake_direction.Up)
-                    {
-                        direction = snake_direction.Down;
-                    }
-                }
-                else if (key == ConsoleKey.LeftArrow)
-                {
-                    if (direction != snake_direction.Right)
-                    {
-                        direction = snake_direction.Left;
-                    }
-                }
-                else if (key == ConsoleKey.RightArrow)
-                {
-                    if (direction != snake_direction.Left)
-                    {
-                        direction = snake_direction.Right;
-                    }
-                }
-                else
-                {
-                }
+                Console.Clear();
+                ResetBoard();
+                DrawBoard();
             }
-            Console.WriteLine("Thanks For Playing");
-            Console.ReadLine();
         }
     }
 }
