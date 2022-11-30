@@ -707,6 +707,7 @@ namespace Snake
             }
             private void RunMainMenu()
             {
+                Console.ResetColor();
                 string prompt = "\r\n███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗     ██████╗  █████╗ ███╗   ███╗███████╗\r\n██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝\r\n███████╗██╔██╗ ██║███████║█████╔╝ █████╗      ██║  ███╗███████║██╔████╔██║█████╗  \r\n╚════██║██║╚██╗██║██╔══██║██╔═██╗ ██╔══╝      ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  \r\n███████║██║ ╚████║██║  ██║██║  ██╗███████╗    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗\r\n╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\r\n                                                                                  \r\n";
                 string[] options = { "Play", "Highscore", "Help", "Exit" };
                 Menu mainMenu = new Menu(prompt, options);
@@ -734,16 +735,15 @@ namespace Snake
                 Console.WriteLine();
                 Console.WriteLine("High Score List:");
                 Console.WriteLine($"{highScoreName} {highScore}");
-                Console.WriteLine("Press B for back to main menu");
-                Console.WriteLine("Press Esc to quit");
-                keyPress = Console.ReadKey(true);
-                if (keyPress.Key == ConsoleKey.B)
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine("<< * Back to main menu >>", Console.BackgroundColor);
+                Console.ReadKey(true);
+                if (true)
                 {
-                    Start();
-                }
-                if (keyPress.Key == ConsoleKey.Escape)
-                {
-                    Environment.Exit(0);
+                    RunMainMenu();
                 }
             }
             private void Help()
@@ -764,16 +764,13 @@ namespace Snake
                 Console.WriteLine("Left-Arrow:  Move left");
                 Console.WriteLine("Spacebar:    Shoot!");
                 Console.WriteLine();
-                Console.WriteLine("Press B for back to main menu");
-                Console.WriteLine("Press Esc to quit");
-                keyPress = Console.ReadKey(true);
-                if (keyPress.Key == ConsoleKey.B)
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine("<< * Back to main menu >>", Console.BackgroundColor);
+                Console.ReadKey(true);
+                if (true)
                 {
-                    Start();
-                }
-                if (keyPress.Key == ConsoleKey.Escape)
-                {
-                    Environment.Exit(0);
+                    RunMainMenu();
                 }
             }
             private void ExitGame()
