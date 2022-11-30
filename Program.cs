@@ -28,7 +28,11 @@ namespace Snake
             Fruit,       // 2
             Body,        // 3
             Head,        // 4
-            Monster      // 5
+            Monster,     // 5
+            Shott,       // 6
+            Explosion1,  // 7
+            Explosion2   // 8
+
         }
         public static class snake_direction //implement directions
         {
