@@ -21,7 +21,8 @@ namespace Snake
         public static bool active=true;
         public static bool activePlay = true;
         public static int lastDirection = 0;
-        public static bool shoot = false;       
+        public static bool shoot = false;
+        public static int shootCounter = 0;
         public enum Snake
         {
             Empty,       // 0
@@ -33,6 +34,11 @@ namespace Snake
             Shott,       // 6
             Explosion1,  // 7
             Explosion2   // 8
+        }
+        public static class Bullet
+        {
+            public static int direction;
+            public static int[,] coordinate=new int[1,1];
         }
         public static class snake_direction //implement directions
         {
