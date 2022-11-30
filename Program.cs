@@ -227,8 +227,12 @@ namespace Snake
         }
         public static void Explosion(int remove)
         {
-            if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Monster) board[activeBullets[remove].i, activeBullets[remove].j] = Snake.Empty;
-            boardBoom[activeBullets[remove].i, activeBullets[remove].j] = Snake.Explosion1;
+            if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Monster)
+            {
+                boardBoom[activeBullets[remove].i, activeBullets[remove].j] = Snake.Explosion1;
+                board[activeBullets[remove].i, activeBullets[remove].j] = Snake.Empty;
+                score = score + 1;
+            }
             activeBullets.RemoveAt(remove);
         }
         public static void BulletMove()
