@@ -21,6 +21,8 @@ namespace Snake
         public static bool active=true;
         public static bool activePlay = true;
         public static int lastDirection = 0;
+        public static bool shoot = false;
+        public static int shootCounter = 0;
         public enum Snake
         {
             Empty,       // 0
@@ -32,7 +34,6 @@ namespace Snake
             Shott,       // 6
             Explosion1,  // 7
             Explosion2   // 8
-
         }
         public static class snake_direction //implement directions
         {
@@ -64,7 +65,7 @@ namespace Snake
         {
             snakeSize = 0;
             score = 0;
-            direction = 6;
+            direction = 1;
             {
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
@@ -165,13 +166,24 @@ namespace Snake
             mySnake.positions.Clear();
             Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
         }
-        public static void Start_thread() //auto movement implement using thread method
+        public static void Shoot()
         {
+
+        }
+        public static void Start_thread() //auto movement implement using thread method
+        {            
             while (true)
             {
+                shootCounter = shootCounter + 1;
                 lastDirection = 0;
-                if (direction == snake_direction.Up)
+                if(shoot==true)
                 {
+                    shoot = false;
+                    Shoot();
+                }
+                if (direction == snake_direction.Up && shootCounter==3)
+                {
+                    shootCounter = 0;
                     // goto UP
                     if (Snake_Head_Position.i == 1)
                     {
@@ -193,12 +205,12 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
                         Fruit();
-                        BodyMove();
-                        DrawBoard();
+                        BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Right)
+                else if (direction == snake_direction.Right && shootCounter == 3)
                 {
+                    shootCounter = 0;
                     // goto right
                     if (Snake_Head_Position.j == board.GetLength(1)-2)
                     {
@@ -220,12 +232,12 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();
-                        DrawBoard();
+                        BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Down)
+                else if (direction == snake_direction.Down && shootCounter == 3)
                 {
+                    shootCounter = 0;
                     // goto down
                     if (Snake_Head_Position.i == board.GetLength(0)-2)
                     {
@@ -247,12 +259,12 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();
-                        DrawBoard();
+                        BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Left)
+                else if (direction == snake_direction.Left && shootCounter == 3)
                 {
+                    shootCounter = 0;
                     // goto left
                     if (Snake_Head_Position.j == 1)
                     {
@@ -274,11 +286,11 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();
-                        DrawBoard();
+                        BodyMove();                        
                     }
                 }
-                Thread.Sleep(Speed * 20); //apply speed
+                DrawBoard();
+                Thread.Sleep(Speed * 5); //apply speed
             }
         }
         static void StartMenu()
@@ -429,7 +441,11 @@ namespace Snake
                             direction = snake_direction.Right;
                             lastDirection = 1;
                         }
-                    }                    
+                    }
+                    else if (key == ConsoleKey.Spacebar)
+                    {
+                        shoot = true;
+                    }
                 }
                 StartMenu();
             } while (activePlay == true);
