@@ -377,8 +377,7 @@ namespace Snake
             {
                 int rng = random.Next(counter);
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
-            }
-            
+            }            
         }
         static void Main(string[] args)
         {
