@@ -412,7 +412,20 @@ namespace Snake
             Console.WriteLine();
             Console.WriteLine("Press L to high score list");
             Console.WriteLine("Press H to help");
+            Console.WriteLine("Press M to change speed");
             Console.WriteLine("Press Esc to quit");
+            if (Speed == 10)
+            {
+                Console.WriteLine("Speed: Fast");
+            }
+            else if(Speed == 30)
+            {
+                Console.WriteLine("Speed: Medium");
+            }
+            else if (Speed == 50)
+            {
+                Console.WriteLine("Speed: Slow");
+            }
             keyPress = Console.ReadKey(true);
             if (keyPress.Key == ConsoleKey.L)
             {
@@ -421,6 +434,10 @@ namespace Snake
             else if (keyPress.Key == ConsoleKey.H)
             {
                 Help();
+            }
+            else if (keyPress.Key == ConsoleKey.M)
+            {
+                ChooseSpeed();
             }
             else if (keyPress.Key == ConsoleKey.Escape)
             {
@@ -433,6 +450,24 @@ namespace Snake
             else goto start;
             Console.WriteLine();
         }
+
+        private static void ChooseSpeed()
+        {
+            if (Speed == 10)
+            {
+                Speed = 30;
+            }
+            else if (Speed == 30)
+            {
+                Speed = 50;
+            }
+            else if (Speed == 50)
+            {
+                Speed = 10;
+            }
+            StartMenu();
+        }
+
         static void PlayerName()
         {
             Console.Clear();
@@ -462,7 +497,19 @@ namespace Snake
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("Help Page:");
+            Console.WriteLine($"_______    _______  _______________  _______         ___________\n" +
+                              $"|     |    |     |  |             |  |     |         |   ____   |\n" +
+                              $"|     |____|     |  |    _________|  |     |         |   |__|   |\n" +
+                              $"|                |  |    |_______    |     |         |     _____|\n" +
+                              $"|      ____      |  |    ________|   |     |_______  |     |\n" +
+                              $"|     |    |     |  |    |_________  |            |  |     |\n" +
+                              $"|_____|    |_____|  |_____________|  |____________|  |_____|\n");
+            Console.WriteLine($"Controls:");
+            Console.WriteLine("Up-Arrow:    Move up");
+            Console.WriteLine("Down-Arrow:  Move down");
+            Console.WriteLine("Right-Arrow: Move right");
+            Console.WriteLine("Left-Arrow:  Move left");
+            Console.WriteLine("Spacebar:    Shoot!");
             Console.WriteLine();
             Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
