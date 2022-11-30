@@ -23,7 +23,7 @@ namespace Snake
         public static bool activePlay = true;
         public static int lastDirection = 0;
         public static bool shoot = false;
-        public static int shootCounter = 0;
+        public static int moveCounter = 0;
         public static List<Bullet> activeBullets = new List<Bullet>();
         public enum Snake
         {
@@ -279,16 +279,16 @@ namespace Snake
         {            
             while (true)
             {
-                shootCounter = shootCounter + 1;
+                moveCounter = moveCounter + 1;
                 lastDirection = lastDirection-1;
                 if(shoot==true)
                 {
                     shoot = false;
                     Shoot();
                 }
-                if (direction == snake_direction.Up && shootCounter==3)
+                if (direction == snake_direction.Up && moveCounter==3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto UP
                     if (Snake_Head_Position.i == 1)
                     {
@@ -313,9 +313,9 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Right && shootCounter == 3)
+                else if (direction == snake_direction.Right && moveCounter == 3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto right
                     if (Snake_Head_Position.j == board.GetLength(1)-2)
                     {
@@ -340,9 +340,9 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Down && shootCounter == 3)
+                else if (direction == snake_direction.Down && moveCounter == 3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto down
                     if (Snake_Head_Position.i == board.GetLength(0)-2)
                     {
@@ -367,9 +367,9 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Left && shootCounter == 3)
+                else if (direction == snake_direction.Left && moveCounter == 3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto left
                     if (Snake_Head_Position.j == 1)
                     {
