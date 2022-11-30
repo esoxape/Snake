@@ -10,6 +10,7 @@ namespace Snake
     internal class Program
     {
         public static Snake[,] board = new Snake[20, 30];
+        public static Snake[,] boardBoom = new Snake[20, 30];
         public static int direction = 1; //0=north-up, 1=east-right, 2=south-down, 3=west-left
         public static int score = 0;
         public static int highScore = 0;
@@ -22,6 +23,8 @@ namespace Snake
         public static bool activePlay = true;
         public static int lastDirection = 0;
         public static bool shoot = false;
+        public static int moveCounter = 0;
+        public static List<Bullet> activeBullets = new List<Bullet>();
         public static int shootCounter = 0;
         public static int monsterCounter = 0;
         public static Timer timer;
@@ -38,10 +41,17 @@ namespace Snake
             Explosion1,  // 7
             Explosion2   // 8
         }
-        public static class Bullet
+        public class Bullet
         {
-            public static int direction;
-            public static int[,] coordinate=new int[1,1];
+            public int direction;
+            public int i;
+            public int j;
+            public Bullet(int direction1, int i1, int j1)
+            {
+                direction = direction1;
+                i = i1;
+                j= j1;
+            }
         }
         public static class snake_direction //implement directions
         {
@@ -73,7 +83,7 @@ namespace Snake
         {
             snakeSize = 0;
             score = 0;
-            direction = 1;
+            direction = 2;
             {
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
@@ -102,29 +112,65 @@ namespace Snake
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j] == Snake.Empty)
+                    if (boardBoom[i,j] ==Snake.Explosion1)
+                    {
+                        Console.Write("#", Console.ForegroundColor =ConsoleColor.Red);
+                        boardBoom[i,j] = Snake.Explosion2;
+                        if(i+1 <board.GetLength(0))
+                        {
+                            boardBoom[i + 1, j] = Snake.Explosion2;
+                        }
+                        if (i + 1 < board.GetLength(0) && j+1<board.GetLength(1))
+                        {
+                            boardBoom[i + 1, j+1] = Snake.Explosion2;
+                        }
+                        if (j + 1 < board.GetLength(1))
+                        {
+                            boardBoom[i, j+1] = Snake.Explosion2;
+                        }
+                        if (j - 1 > -1)
+                        {
+                            boardBoom[i, j - 1] = Snake.Explosion2;
+                        }
+                        if (i - 1 > -1)
+                        {
+                            boardBoom[i - 1, j] = Snake.Explosion2;
+                        }
+
+                    }
+                    else if (boardBoom[i, j] == Snake.Explosion2)
+                    {
+                        Console.Write("#", Console.ForegroundColor = ConsoleColor.Yellow);
+                        boardBoom[i, j] = Snake.Empty;
+                    }
+                    else if (board[i, j] == Snake.Empty)
                     {
                         Console.Write(' ');
                     }
-                    if (board[i, j] == Snake.Wall)
+                    else if (board[i, j] == Snake.Wall)
                     {
                         Console.Write("@", Console.ForegroundColor = ConsoleColor.Magenta);
                     }
-                    if (board[i, j] == Snake.Head)
+                    else if (board[i, j] == Snake.Head)
                     {
                         Console.Write("O", Console.ForegroundColor = ConsoleColor.Green);
                     }
-                    if (board[i, j] == Snake.Body)
+                    else if (board[i, j] == Snake.Body)
                     {
                         Console.Write("o", Console.ForegroundColor = ConsoleColor.DarkGreen);
                     }
-                    if (board[i, j] == Snake.Fruit)
+                    else if (board[i, j] == Snake.Fruit)
                     {
                         Console.Write("*", Console.ForegroundColor = ConsoleColor.Blue);
                     }
                     if (board[i, j] == Snake.Monster)
                     {
                         Console.Write("M", Console.ForegroundColor = ConsoleColor.Red);
+                    }
+                }
+                    else if (board[i, j] == Snake.Shott)
+                    {
+                        Console.Write("¤", Console.ForegroundColor = ConsoleColor.Yellow);
                     }
                 }
                 Console.WriteLine();
@@ -180,23 +226,78 @@ namespace Snake
         }
         public static void Shoot()
         {
-
+            Bullet M = new Bullet(direction, Snake_Head_Position.i, Snake_Head_Position.j);
+            activeBullets.Add(M);
+        }
+        public static void Explosion(int remove)
+        {
+            boardBoom[activeBullets[remove].i, activeBullets[remove].j]=Snake.Explosion1;
+            activeBullets.RemoveAt(remove);            
+        }
+        public static void BulletMove()
+        {
+            for(int i = 0; i < activeBullets.Count; i++)
+            {
+                if (activeBullets[i].direction==0)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j]==Snake.Shott) board[activeBullets[i].i, activeBullets[i].j]=Snake.Empty;
+                    activeBullets[i].i = activeBullets[i].i- 1;
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+                if (activeBullets[i].direction == 1)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    activeBullets[i].j = activeBullets[i].j + 1;
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+                if (activeBullets[i].direction == 2)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    activeBullets[i].i = activeBullets[i].i + 1;
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+                if (activeBullets[i].direction == 3)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    activeBullets[i].j = activeBullets[i].j - 1;
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+            }
         }
         public static void Start_thread() //auto movement implement using thread method
         {            
             while (true)
             {
-                
-                shootCounter = shootCounter + 1;
-                lastDirection = 0;
+                moveCounter = moveCounter + 1;
+                lastDirection = lastDirection-1;
                 if(shoot==true)
                 {
                     shoot = false;
                     Shoot();
                 }
-                if (direction == snake_direction.Up && shootCounter==3)
+                if (direction == snake_direction.Up && moveCounter==3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto UP
                     if (Snake_Head_Position.i == 1)
                     {
@@ -222,9 +323,9 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Right && shootCounter == 3)
+                else if (direction == snake_direction.Right && moveCounter == 3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto right
                     if (Snake_Head_Position.j == board.GetLength(1)-2)
                     {
@@ -250,9 +351,9 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Down && shootCounter == 3)
+                else if (direction == snake_direction.Down && moveCounter == 3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto down
                     if (Snake_Head_Position.i == board.GetLength(0)-2)
                     {
@@ -278,9 +379,9 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
-                else if (direction == snake_direction.Left && shootCounter == 3)
+                else if (direction == snake_direction.Left && moveCounter == 3)
                 {
-                    shootCounter = 0;
+                    moveCounter = 0;
                     // goto left
                     if (Snake_Head_Position.j == 1)
                     {
@@ -306,6 +407,7 @@ namespace Snake
                         BodyMove();                        
                     }
                 }
+                BulletMove();
                 DrawBoard();
                 Thread.Sleep(Speed * 5); //apply speed
             }
@@ -323,7 +425,20 @@ namespace Snake
             Console.WriteLine();
             Console.WriteLine("Press L to high score list");
             Console.WriteLine("Press H to help");
+            Console.WriteLine("Press M to change speed");
             Console.WriteLine("Press Esc to quit");
+            if (Speed == 10)
+            {
+                Console.WriteLine("Speed: Fast");
+            }
+            else if(Speed == 30)
+            {
+                Console.WriteLine("Speed: Medium");
+            }
+            else if (Speed == 50)
+            {
+                Console.WriteLine("Speed: Slow");
+            }
             keyPress = Console.ReadKey(true);
             if (keyPress.Key == ConsoleKey.L)
             {
@@ -332,6 +447,10 @@ namespace Snake
             else if (keyPress.Key == ConsoleKey.H)
             {
                 Help();
+            }
+            else if (keyPress.Key == ConsoleKey.M)
+            {
+                ChooseSpeed();
             }
             else if (keyPress.Key == ConsoleKey.Escape)
             {
@@ -344,6 +463,24 @@ namespace Snake
             else goto start;
             Console.WriteLine();
         }
+
+        private static void ChooseSpeed()
+        {
+            if (Speed == 10)
+            {
+                Speed = 30;
+            }
+            else if (Speed == 30)
+            {
+                Speed = 50;
+            }
+            else if (Speed == 50)
+            {
+                Speed = 10;
+            }
+            StartMenu();
+        }
+
         static void PlayerName()
         {
             Console.Clear();
@@ -373,7 +510,19 @@ namespace Snake
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("Help Page:");
+            Console.WriteLine($"_______    _______  _______________  _______         ___________\n" +
+                              $"|     |    |     |  |             |  |     |         |   ____   |\n" +
+                              $"|     |____|     |  |    _________|  |     |         |   |__|   |\n" +
+                              $"|                |  |    |_______    |     |         |     _____|\n" +
+                              $"|      ____      |  |    ________|   |     |_______  |     |\n" +
+                              $"|     |    |     |  |    |_________  |            |  |     |\n" +
+                              $"|_____|    |_____|  |_____________|  |____________|  |_____|\n");
+            Console.WriteLine($"Controls:");
+            Console.WriteLine("Up-Arrow:    Move up");
+            Console.WriteLine("Down-Arrow:  Move down");
+            Console.WriteLine("Right-Arrow: Move right");
+            Console.WriteLine("Left-Arrow:  Move left");
+            Console.WriteLine("Spacebar:    Shoot!");
             Console.WriteLine();
             Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
@@ -465,34 +614,34 @@ namespace Snake
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
                     if (key == ConsoleKey.UpArrow)
                     {
-                        if (direction != snake_direction.Down && lastDirection==0)
+                        if (direction != snake_direction.Down && lastDirection<1)
                         {
                             direction = snake_direction.Up;
-                            lastDirection = 1;
+                            lastDirection = 3;
                         }
                     }
                     else if (key == ConsoleKey.DownArrow)
                     {
-                        if (direction != snake_direction.Up && lastDirection == 0)
+                        if (direction != snake_direction.Up && lastDirection < 1)
                         {
                             direction = snake_direction.Down;
-                            lastDirection = 1;
+                            lastDirection = 3;
                         }
                     }
                     else if (key == ConsoleKey.LeftArrow)
                     {
-                        if (direction != snake_direction.Right && lastDirection == 0)
+                        if (direction != snake_direction.Right && lastDirection < 1)
                         {
                             direction = snake_direction.Left;
-                            lastDirection = 1;
+                            lastDirection = 3;
                         }
                     }
                     else if (key == ConsoleKey.RightArrow)
                     {
-                        if (direction != snake_direction.Left && lastDirection == 0)
+                        if (direction != snake_direction.Left && lastDirection < 1)
                         {
                             direction = snake_direction.Right;
-                            lastDirection = 1;
+                            lastDirection = 3;
                         }
                     }
                     else if (key == ConsoleKey.Spacebar)
