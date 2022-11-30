@@ -23,12 +23,9 @@ namespace Snake
         public static bool activePlay = true;
         public static int lastDirection = 0;
         public static bool shoot = false;
+        public static Timer timer;
         public static int moveCounter = 0;
         public static List<Bullet> activeBullets = new List<Bullet>();
-        public static int shootCounter = 0;
-        public static int monsterCounter = 0;
-        public static Timer timer;
-
         public enum Snake
         {
             Empty,       // 0
@@ -167,7 +164,6 @@ namespace Snake
                     {
                         Console.Write("M", Console.ForegroundColor = ConsoleColor.Red);
                     }
-                }
                     else if (board[i, j] == Snake.Shott)
                     {
                         Console.Write("¤", Console.ForegroundColor = ConsoleColor.Yellow);
@@ -288,8 +284,14 @@ namespace Snake
         {            
             while (true)
             {
+<<<<<<< HEAD
+                
+                shootCounter = shootCounter + 1;
+                lastDirection = 0;
+=======
                 moveCounter = moveCounter + 1;
                 lastDirection = lastDirection-1;
+>>>>>>> 4b5ea30b23c50c7c8701baf5bce2e0cc119124f6
                 if(shoot==true)
                 {
                     shoot = false;
