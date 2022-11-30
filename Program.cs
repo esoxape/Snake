@@ -505,34 +505,38 @@ namespace Snake
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
             }
         }
-        static void Monster(object o)
+        static void Monster()
         {
-            Random random = new Random();
-            int[,] array = new int[10000, 2];
-            int counter = 0;
-            int countMonster = 0;
-            bool check = false;
-            for (int i = 0; i < board.GetLength(0); i++)
+            while (true)
             {
-                for (var j = 0; j < board.GetLength(1); j++)
+                Random random = new Random();
+                int[,] array = new int[10000, 2];
+                int counter = 0;
+                int countMonster = 0;
+                bool check = false;
+                for (int i = 0; i < board.GetLength(0); i++)
                 {
-                    if (board[i, j] == Snake.Monster)
+                    for (var j = 0; j < board.GetLength(1); j++)
                     {
-                        countMonster++;
-                        if (countMonster == 6) check = true;
-                    }
-                    if (board[i, j] == Snake.Empty)
-                    {
-                        array[counter, 0] = i;
-                        array[counter, 1] = j;
-                        counter++;
+                        if (board[i, j] == Snake.Monster)
+                        {
+                            countMonster++;
+                            if (countMonster == 6) check = true;
+                        }
+                        if (board[i, j] == Snake.Empty)
+                        {
+                            array[counter, 0] = i;
+                            array[counter, 1] = j;
+                            counter++;
+                        }
                     }
                 }
-            }
-            if (check == false)
-            {
-                int rng = random.Next(counter);
-                board[array[rng, 0], array[rng, 1]] = Snake.Monster;
+                if (check == false)
+                {
+                    int rng = random.Next(counter);
+                    board[array[rng, 0], array[rng, 1]] = Snake.Monster;
+                }
+                Thread.Sleep(5000);
             }
         }
 
@@ -547,10 +551,10 @@ namespace Snake
                 DrawBoard();
                 Thread th = new Thread(new ThreadStart(Start_thread)); //implement thread
                 th.Start();
+                Thread th2 = new Thread(new ThreadStart(Monster));
+                th2.Start();
                 while (active == true)
-                {
-
-                    timer = new Timer(Monster, null, 0, 6000);
+                {              
 
                     var key = Console.ReadKey().Key; // Read Key From Console
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
