@@ -112,6 +112,27 @@ namespace Snake
                     {
                         Console.Write("#", Console.ForegroundColor =ConsoleColor.Red);
                         boardBoom[i,j] = Snake.Explosion2;
+                        if(i+1 <board.GetLength(0))
+                        {
+                            boardBoom[i + 1, j] = Snake.Explosion2;
+                        }
+                        if (i + 1 < board.GetLength(0) && j+1<board.GetLength(1))
+                        {
+                            boardBoom[i + 1, j+1] = Snake.Explosion2;
+                        }
+                        if (j + 1 < board.GetLength(1))
+                        {
+                            boardBoom[i, j+1] = Snake.Explosion2;
+                        }
+                        if (j - 1 > -1)
+                        {
+                            boardBoom[i, j - 1] = Snake.Explosion2;
+                        }
+                        if (i - 1 > -1)
+                        {
+                            boardBoom[i - 1, j] = Snake.Explosion2;
+                        }
+
                     }
                     else if (boardBoom[i, j] == Snake.Explosion2)
                     {
