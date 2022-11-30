@@ -16,7 +16,7 @@ namespace Snake
         public static string highScoreName = "";
         public static string playerName = "";
         public static int snakeSize = 0;
-        public static int Speed = 1; //speed of snake movement (lower to increase speed)
+        public static int Speed = 10; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
         public static bool active=true;
         public static bool activePlay = true;
@@ -27,7 +27,8 @@ namespace Snake
             Wall,        // 1
             Fruit,       // 2
             Body,        // 3
-            Head         // 4
+            Head,        // 4
+            Monster      // 5
         }
         public static class snake_direction //implement directions
         {
@@ -273,7 +274,7 @@ namespace Snake
                         DrawBoard();
                     }
                 }
-                Thread.Sleep(Speed * 250); //apply speed
+                Thread.Sleep(Speed * 20); //apply speed
             }
         }
         static void StartMenu()
