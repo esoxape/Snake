@@ -21,8 +21,7 @@ namespace Snake
         public static bool active=true;
         public static bool activePlay = true;
         public static int lastDirection = 0;
-        public static bool shoot = false;
-        public static int shootCounter = 0;
+        public static bool shoot = false;       
         public enum Snake
         {
             Empty,       // 0
