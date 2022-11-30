@@ -283,12 +283,7 @@ namespace Snake
         public static void Start_thread() //auto movement implement using thread method
         {
             while (true)
-            {
-<<<<<<< HEAD
-                
-                shootCounter = shootCounter + 1;
-                lastDirection = 0;
-=======
+            {                
                 moveCounter = moveCounter + 1;
                 lastDirection = lastDirection - 1;
                 if (shoot == true)
