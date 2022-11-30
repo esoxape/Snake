@@ -413,68 +413,6 @@ namespace Snake
                 Thread.Sleep(Speed * 4); //apply speed
             }
         }
-        static void StartMenu()
-        {
-        start:
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine("---------------------------------------------");
-            Console.WriteLine("--------------Welcome to snake---------------");
-            Console.WriteLine("---------------------------------------------");
-            Console.WriteLine();
-            Console.WriteLine("Press P to play");
-            Console.WriteLine();
-            Console.WriteLine("Press L to high score list");
-            Console.WriteLine("Press H to help");
-            Console.WriteLine("Press M to change speed");
-            Console.WriteLine("Press Esc to quit");
-            if (Speed == 10)
-            {
-                Console.WriteLine("Speed: Fast");
-            }
-            else if (Speed == 30)
-            {
-                Console.WriteLine("Speed: Medium");
-            }
-            else if (Speed == 50)
-            {
-                Console.WriteLine("Speed: Slow");
-            }
-            keyPress = Console.ReadKey(true);
-
-            if (keyPress.Key == ConsoleKey.M)
-            {
-                ChooseSpeed();
-            }
-            else if (keyPress.Key == ConsoleKey.Escape)
-            {
-                Environment.Exit(0);
-            }
-            else if (keyPress.Key == ConsoleKey.P)
-            {
-                PlayerName();
-            }
-            else goto start;
-            Console.WriteLine();
-        }
-
-        private static void ChooseSpeed()
-        {
-            if (Speed == 10)
-            {
-                Speed = 30;
-            }
-            else if (Speed == 30)
-            {
-                Speed = 50;
-            }
-            else if (Speed == 50)
-            {
-                Speed = 10;
-            }
-            StartMenu();
-        }
-
         static void PlayerName()
         {
             Console.Clear();
@@ -615,7 +553,7 @@ namespace Snake
             {
                 Console.ResetColor();
                 string prompt = "\r\n███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗     ██████╗  █████╗ ███╗   ███╗███████╗\r\n██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝\r\n███████╗██╔██╗ ██║███████║█████╔╝ █████╗      ██║  ███╗███████║██╔████╔██║█████╗  \r\n╚════██║██║╚██╗██║██╔══██║██╔═██╗ ██╔══╝      ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  \r\n███████║██║ ╚████║██║  ██║██║  ██╗███████╗    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗\r\n╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\r\n                                                                                  \r\n";
-                string[] options = { "Play", "Highscore", "Help", "Exit" };
+                string[] options = { "Play", "Highscore", "Help", "Change speed", "Exit" };
                 Menu mainMenu = new Menu(prompt, options);
                 int selectedIndex = mainMenu.Run();
 
@@ -631,9 +569,33 @@ namespace Snake
                         Help();
                         break;
                     case 3:
+                        ChangeSpeed();
+                        break;
+                    case 4:
                         ExitGame();
                         break;
                 }
+            }
+            private void ChangeSpeed()
+            {
+                string prompt = "Choose speed:";
+                string[] options = { "Fast", "Medium", "Slow"};
+                Menu speed = new Menu(prompt, options);
+                int selectedIndex = speed.Run();
+
+                switch (selectedIndex)
+                {
+                    case 0:
+                        Speed = 5;
+                        break;
+                    case 1:
+                        Speed = 30;
+                        break;
+                    case 2:
+                        Speed = 60;
+                        break;
+                }
+                RunMainMenu();
             }
             private void HighScore()
             {
@@ -700,6 +662,7 @@ namespace Snake
             private void DisplayOptions()
             {
                 Console.WriteLine(Prompt);
+                Console.WriteLine();
                 for (int i = 0; i < Options.Length; i++)
                 {
                     string currentOption = Options[i];
