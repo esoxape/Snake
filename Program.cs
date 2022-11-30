@@ -536,7 +536,7 @@ namespace Snake
                     int rng = random.Next(counter);
                     board[array[rng, 0], array[rng, 1]] = Snake.Monster;
                 }
-                Thread.Sleep(5000);
+                Thread.Sleep(random.Next(5000, 10000));
             }
         }
 
