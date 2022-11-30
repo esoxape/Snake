@@ -19,7 +19,7 @@ namespace Snake
         public static int snakeSize = 0;
         public static int Speed = 10; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
-        public static bool active=true;
+        public static bool active = true;
         public static bool activePlay = true;
         public static int lastDirection = 0;
         public static bool shoot = false;
@@ -46,7 +46,7 @@ namespace Snake
             {
                 direction = direction1;
                 i = i1;
-                j= j1;
+                j = j1;
             }
         }
         public static class snake_direction //implement directions
@@ -108,21 +108,21 @@ namespace Snake
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    if (boardBoom[i,j] ==Snake.Explosion1)
+                    if (boardBoom[i, j] == Snake.Explosion1)
                     {
-                        Console.Write("#", Console.ForegroundColor =ConsoleColor.Red);
-                        boardBoom[i,j] = Snake.Explosion2;
-                        if(i+1 <board.GetLength(0))
+                        Console.Write("#", Console.ForegroundColor = ConsoleColor.Red);
+                        boardBoom[i, j] = Snake.Explosion2;
+                        if (i + 1 < board.GetLength(0))
                         {
                             boardBoom[i + 1, j] = Snake.Explosion2;
                         }
-                        if (i + 1 < board.GetLength(0) && j+1<board.GetLength(1))
+                        if (i + 1 < board.GetLength(0) && j + 1 < board.GetLength(1))
                         {
-                            boardBoom[i + 1, j+1] = Snake.Explosion2;
+                            boardBoom[i + 1, j + 1] = Snake.Explosion2;
                         }
                         if (j + 1 < board.GetLength(1))
                         {
-                            boardBoom[i, j+1] = Snake.Explosion2;
+                            boardBoom[i, j + 1] = Snake.Explosion2;
                         }
                         if (j - 1 > -1)
                         {
@@ -171,8 +171,8 @@ namespace Snake
         {
             Position M = new Position(Snake_Head_Position.i, Snake_Head_Position.j);
             mySnake.positions.Add(M);
-            if(mySnake.positions.Count == 1) mySnake.positions.Add(M);
-            score = score+10;
+            if (mySnake.positions.Count == 1) mySnake.positions.Add(M);
+            score = score + 10;
         }
         public static void BodyMove()
         {
@@ -180,16 +180,16 @@ namespace Snake
             {
                 for (var j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i,j] == Snake.Body)board[i,j] = Snake.Empty;
+                    if (board[i, j] == Snake.Body) board[i, j] = Snake.Empty;
                 }
-            }                   
+            }
 
             for (int i = 0; i < mySnake.positions.Count; i++)
             {
                 if (board[mySnake.positions[i].i, mySnake.positions[i].j] != Snake.Head) board[mySnake.positions[i].i, mySnake.positions[i].j] = Snake.Body;
             }
 
-            for (int i = mySnake.positions.Count-1; i > -1; i--)
+            for (int i = mySnake.positions.Count - 1; i > -1; i--)
             {
                 if (i > 1)
                 {
@@ -222,17 +222,17 @@ namespace Snake
         }
         public static void Explosion(int remove)
         {
-            boardBoom[activeBullets[remove].i, activeBullets[remove].j]=Snake.Explosion1;
-            activeBullets.RemoveAt(remove);            
+            boardBoom[activeBullets[remove].i, activeBullets[remove].j] = Snake.Explosion1;
+            activeBullets.RemoveAt(remove);
         }
         public static void BulletMove()
         {
-            for(int i = 0; i < activeBullets.Count; i++)
+            for (int i = 0; i < activeBullets.Count; i++)
             {
-                if (activeBullets[i].direction==0)
+                if (activeBullets[i].direction == 0)
                 {
-                    if (board[activeBullets[i].i, activeBullets[i].j]==Snake.Shott) board[activeBullets[i].i, activeBullets[i].j]=Snake.Empty;
-                    activeBullets[i].i = activeBullets[i].i- 1;
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    activeBullets[i].i = activeBullets[i].i - 1;
                     if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
                     {
                         Explosion(i);
@@ -276,17 +276,17 @@ namespace Snake
             }
         }
         public static void Start_thread() //auto movement implement using thread method
-        {            
+        {
             while (true)
             {
                 moveCounter = moveCounter + 1;
-                lastDirection = lastDirection-1;
-                if(shoot==true)
+                lastDirection = lastDirection - 1;
+                if (shoot == true)
                 {
                     shoot = false;
                     Shoot();
                 }
-                if (direction == snake_direction.Up && moveCounter==3)
+                if (direction == snake_direction.Up && moveCounter == 3)
                 {
                     moveCounter = 0;
                     // goto UP
@@ -308,16 +308,16 @@ namespace Snake
                             Score();
                             break;
                         }
-                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;                        
+                        board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();                        
+                        BodyMove();
                     }
                 }
                 else if (direction == snake_direction.Right && moveCounter == 3)
                 {
                     moveCounter = 0;
                     // goto right
-                    if (Snake_Head_Position.j == board.GetLength(1)-2)
+                    if (Snake_Head_Position.j == board.GetLength(1) - 2)
                     {
                         Score();
                         break;
@@ -337,14 +337,14 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();                        
+                        BodyMove();
                     }
                 }
                 else if (direction == snake_direction.Down && moveCounter == 3)
                 {
                     moveCounter = 0;
                     // goto down
-                    if (Snake_Head_Position.i == board.GetLength(0)-2)
+                    if (Snake_Head_Position.i == board.GetLength(0) - 2)
                     {
                         Score();
                         break;
@@ -364,7 +364,7 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();                        
+                        BodyMove();
                     }
                 }
                 else if (direction == snake_direction.Left && moveCounter == 3)
@@ -391,7 +391,7 @@ namespace Snake
                         }
                         board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Head;
                         Fruit();
-                        BodyMove();                        
+                        BodyMove();
                     }
                 }
                 BulletMove();
@@ -401,7 +401,7 @@ namespace Snake
         }
         static void StartMenu()
         {
-            start:
+        start:
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------");
@@ -418,7 +418,7 @@ namespace Snake
             {
                 Console.WriteLine("Speed: Fast");
             }
-            else if(Speed == 30)
+            else if (Speed == 30)
             {
                 Console.WriteLine("Speed: Medium");
             }
@@ -427,15 +427,8 @@ namespace Snake
                 Console.WriteLine("Speed: Slow");
             }
             keyPress = Console.ReadKey(true);
-            if (keyPress.Key == ConsoleKey.L)
-            {
-                HighScore();
-            }
-            else if (keyPress.Key == ConsoleKey.H)
-            {
-                Help();
-            }
-            else if (keyPress.Key == ConsoleKey.M)
+
+            if (keyPress.Key == ConsoleKey.M)
             {
                 ChooseSpeed();
             }
@@ -475,68 +468,22 @@ namespace Snake
             playerName = Console.ReadLine();
             active = true;
         }
-        static void HighScore()
-        {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine("High Score List:");
-            Console.WriteLine($"{highScoreName} {highScore}");
-            Console.WriteLine("Press B for back to main menu");
-            Console.WriteLine("Press Esc to quit");
-            keyPress = Console.ReadKey(true);
-            if (keyPress.Key == ConsoleKey.B)
-            {
-                StartMenu();
-            }
-            if (keyPress.Key == ConsoleKey.Escape)
-            {
-                Environment.Exit(0);
-            }
-        }
-        static void Help()
-        {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine($"_______    _______  _______________  _______         ___________\n" +
-                              $"|     |    |     |  |             |  |     |         |   ____   |\n" +
-                              $"|     |____|     |  |    _________|  |     |         |   |__|   |\n" +
-                              $"|                |  |    |_______    |     |         |     _____|\n" +
-                              $"|      ____      |  |    ________|   |     |_______  |     |\n" +
-                              $"|     |    |     |  |    |_________  |            |  |     |\n" +
-                              $"|_____|    |_____|  |_____________|  |____________|  |_____|\n");
-            Console.WriteLine($"Controls:");
-            Console.WriteLine("Up-Arrow:    Move up");
-            Console.WriteLine("Down-Arrow:  Move down");
-            Console.WriteLine("Right-Arrow: Move right");
-            Console.WriteLine("Left-Arrow:  Move left");
-            Console.WriteLine("Spacebar:    Shoot!");
-            Console.WriteLine();
-            Console.WriteLine("Press B for back to main menu");
-            Console.WriteLine("Press Esc to quit");
-            keyPress = Console.ReadKey(true);
-            if (keyPress.Key == ConsoleKey.B)
-            {
-                StartMenu();
-            }
-            if (keyPress.Key == ConsoleKey.Escape)
-            {
-                Environment.Exit(0);
-            }
-        }
+
+
         static void Fruit()
         {
             Random random = new Random();
             bool check = true;
-            int[,] array = new int[10000,2];
+            int[,] array = new int[10000, 2];
             int counter = 0;
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (var j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i,j]==Snake.Fruit) check = false;
-                    if(board[i,j]==Snake.Empty)
+                    if (board[i, j] == Snake.Fruit) check = false;
+                    if (board[i, j] == Snake.Empty)
                     {
-                        array[counter, 0] = i;                        
+                        array[counter, 0] = i;
                         array[counter, 1] = j;
                         counter++;
                     }
@@ -547,25 +494,26 @@ namespace Snake
             {
                 int rng = random.Next(counter);
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
-            }            
+            }
         }
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            StartMenu();
+            GameMenu myGame = new GameMenu();
+            myGame.Start();
             ResetBoard();
             do
-            {                
+            {
                 DrawBoard();
                 Thread th = new Thread(new ThreadStart(Start_thread)); //implement thread
-                th.Start();                
-                while (active==true)
+                th.Start();
+                while (active == true)
                 {
                     var key = Console.ReadKey().Key; // Read Key From Console
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
                     if (key == ConsoleKey.UpArrow)
                     {
-                        if (direction != snake_direction.Down && lastDirection<1)
+                        if (direction != snake_direction.Down && lastDirection < 1)
                         {
                             direction = snake_direction.Up;
                             lastDirection = 3;
@@ -600,8 +548,159 @@ namespace Snake
                         shoot = true;
                     }
                 }
-                StartMenu();
+                myGame.Start();
             } while (activePlay == true);
+        }
+        class GameMenu
+        {
+            public void Start()
+            {
+                Console.Title = "Snake Game - Group 3";
+                RunMainMenu();
+
+            }
+            private void RunMainMenu()
+            {
+                string prompt = "\r\n????????????   ??? ?????? ???  ???????????     ???????  ?????? ????   ????????????\r\n?????????????  ?????????????? ????????????    ???????? ????????????? ?????????????\r\n?????????????? ?????????????????? ??????      ???  ?????????????????????????????  \r\n????????????????????????????????? ??????      ???   ????????????????????????????  \r\n??????????? ?????????  ??????  ???????????    ????????????  ?????? ??? ???????????\r\n???????????  ????????  ??????  ???????????     ??????? ???  ??????     ???????????\r\n                                                                                  \r\n";
+                string[] options = { "Play", "Highscore", "Help", "Exit" };
+                Menu mainMenu = new Menu(prompt, options);
+                int selectedIndex = mainMenu.Run();
+
+                switch (selectedIndex)
+                {
+                    case 0:
+                        PlayerName();
+                        break;
+                    case 1:
+                        HighScore();
+                        break;
+                    case 2:
+                        Help();
+                        break;
+                    case 3:
+                        ExitGame();
+                        break;
+                }
+            }
+            private void HighScore()
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("High Score List:");
+                Console.WriteLine($"{highScoreName} {highScore}");
+                Console.WriteLine("Press B for back to main menu");
+                Console.WriteLine("Press Esc to quit");
+                keyPress = Console.ReadKey(true);
+                if (keyPress.Key == ConsoleKey.B)
+                {
+                    Start();
+                }
+                if (keyPress.Key == ConsoleKey.Escape)
+                {
+                    Environment.Exit(0);
+                }
+            }
+            private void Help()
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine($"_______    _______  _______________  _______         ___________\n" +
+                                  $"|     |    |     |  |             |  |     |         |   ____   |\n" +
+                                  $"|     |____|     |  |    _________|  |     |         |   |__|   |\n" +
+                                  $"|                |  |    |_______    |     |         |     _____|\n" +
+                                  $"|      ____      |  |    ________|   |     |_______  |     |\n" +
+                                  $"|     |    |     |  |    |_________  |            |  |     |\n" +
+                                  $"|_____|    |_____|  |_____________|  |____________|  |_____|\n");
+                Console.WriteLine($"Controls:");
+                Console.WriteLine("Up-Arrow:    Move up");
+                Console.WriteLine("Down-Arrow:  Move down");
+                Console.WriteLine("Right-Arrow: Move right");
+                Console.WriteLine("Left-Arrow:  Move left");
+                Console.WriteLine("Spacebar:    Shoot!");
+                Console.WriteLine();
+                Console.WriteLine("Press B for back to main menu");
+                Console.WriteLine("Press Esc to quit");
+                keyPress = Console.ReadKey(true);
+                if (keyPress.Key == ConsoleKey.B)
+                {
+                    Start();
+                }
+                if (keyPress.Key == ConsoleKey.Escape)
+                {
+                    Environment.Exit(0);
+                }
+            }
+            private void ExitGame()
+            {
+                Console.WriteLine("Press any key to exit....");
+                Console.ReadKey(true);
+                Environment.Exit(0);
+            }
+        }
+        class Menu
+        {
+            private int SelectedIndex;
+            private string[] Options;
+            private string Prompt;
+            public Menu(string prompt, string[] options)
+            {
+                Prompt = prompt;
+                Options = options;
+                SelectedIndex = 0;
+            }
+            private void DisplayOptions()
+            {
+                Console.WriteLine(Prompt);
+                for (int i = 0; i < Options.Length; i++)
+                {
+                    string currentOption = Options[i];
+                    string prefix;
+
+                    if (i == SelectedIndex)
+                    {
+                        prefix = "*";
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        prefix = " ";
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
+                    Console.WriteLine($"{prefix} << {currentOption} >>");
+                }
+                Console.ResetColor();
+            }
+            public int Run()
+            {
+                ConsoleKey keyPressed;
+                do
+                {
+                    Console.Clear();
+                    DisplayOptions();
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                    keyPressed = keyInfo.Key;
+                    if (keyPressed == ConsoleKey.UpArrow)
+                    {
+                        SelectedIndex--;
+                        if (SelectedIndex == -1)
+                        {
+                            SelectedIndex = Options.Length - 1;
+                        }
+                    }
+                    else if (keyPressed == ConsoleKey.DownArrow)
+                    {
+                        SelectedIndex++;
+                        if (SelectedIndex == Options.Length)
+                        {
+                            SelectedIndex = 0;
+                        }
+                    }
+                } while (keyPressed != ConsoleKey.Enter);
+
+                return SelectedIndex;
+            }
         }
     }
 }
