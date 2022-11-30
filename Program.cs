@@ -23,6 +23,7 @@ namespace Snake
         public static bool activePlay = true;
         public static int lastDirection = 0;
         public static bool shoot = false;
+        public static Timer timer;
         public static int moveCounter = 0;
         public static List<Bullet> activeBullets = new List<Bullet>();
         public enum Snake
@@ -157,7 +158,11 @@ namespace Snake
                     }
                     else if (board[i, j] == Snake.Fruit)
                     {
-                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
+                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Blue);
+                    }
+                    if (board[i, j] == Snake.Monster)
+                    {
+                        Console.Write("M", Console.ForegroundColor = ConsoleColor.Red);
                     }
                     else if (board[i, j] == Snake.Shott)
                     {
@@ -222,7 +227,12 @@ namespace Snake
         }
         public static void Explosion(int remove)
         {
-            boardBoom[activeBullets[remove].i, activeBullets[remove].j] = Snake.Explosion1;
+            if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Monster)
+            {
+                boardBoom[activeBullets[remove].i, activeBullets[remove].j] = Snake.Explosion1;
+                board[activeBullets[remove].i, activeBullets[remove].j] = Snake.Empty;
+                score = score + 1;
+            }
             activeBullets.RemoveAt(remove);
         }
         public static void BulletMove()
@@ -303,7 +313,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -330,7 +341,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -357,7 +369,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -384,7 +397,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                 board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -396,7 +410,7 @@ namespace Snake
                 }
                 BulletMove();
                 DrawBoard();
-                Thread.Sleep(Speed * 5); //apply speed
+                Thread.Sleep(Speed * 4); //apply speed
             }
         }
         static void StartMenu()
@@ -427,7 +441,7 @@ namespace Snake
                 Console.WriteLine("Speed: Slow");
             }
             keyPress = Console.ReadKey(true);
-            
+
             if (keyPress.Key == ConsoleKey.M)
             {
                 ChooseSpeed();
@@ -468,8 +482,8 @@ namespace Snake
             playerName = Console.ReadLine();
             active = true;
         }
-        
-       
+
+
         static void Fruit()
         {
             Random random = new Random();
@@ -496,6 +510,41 @@ namespace Snake
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
             }
         }
+        static void Monster()
+        {
+            while (true)
+            {
+                Random random = new Random();
+                int[,] array = new int[10000, 2];
+                int counter = 0;
+                int countMonster = 0;
+                bool check = false;
+                for (int i = 0; i < board.GetLength(0); i++)
+                {
+                    for (var j = 0; j < board.GetLength(1); j++)
+                    {
+                        if (board[i, j] == Snake.Monster)
+                        {
+                            countMonster++;
+                            if (countMonster == 6) check = true;
+                        }
+                        if (board[i, j] == Snake.Empty)
+                        {
+                            array[counter, 0] = i;
+                            array[counter, 1] = j;
+                            counter++;
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    int rng = random.Next(counter);
+                    board[array[rng, 0], array[rng, 1]] = Snake.Monster;
+                }
+                Thread.Sleep(random.Next(5000, 10000));
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -507,8 +556,11 @@ namespace Snake
                 DrawBoard();
                 Thread th = new Thread(new ThreadStart(Start_thread)); //implement thread
                 th.Start();
+                Thread th2 = new Thread(new ThreadStart(Monster));
+                th2.Start();
                 while (active == true)
                 {
+
                     var key = Console.ReadKey().Key; // Read Key From Console
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
                     if (key == ConsoleKey.UpArrow)
@@ -561,6 +613,7 @@ namespace Snake
             }
             private void RunMainMenu()
             {
+                Console.ResetColor();
                 string prompt = "\r\n███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗     ██████╗  █████╗ ███╗   ███╗███████╗\r\n██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝\r\n███████╗██╔██╗ ██║███████║█████╔╝ █████╗      ██║  ███╗███████║██╔████╔██║█████╗  \r\n╚════██║██║╚██╗██║██╔══██║██╔═██╗ ██╔══╝      ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  \r\n███████║██║ ╚████║██║  ██║██║  ██╗███████╗    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗\r\n╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\r\n                                                                                  \r\n";
                 string[] options = { "Play", "Highscore", "Help", "Exit" };
                 Menu mainMenu = new Menu(prompt, options);
@@ -588,17 +641,16 @@ namespace Snake
                 Console.WriteLine();
                 Console.WriteLine("High Score List:");
                 Console.WriteLine($"{highScoreName} {highScore}");
-                Console.WriteLine("Press B for back to main menu");
-                Console.WriteLine("Press Esc to quit");
-                keyPress = Console.ReadKey(true);
-                if (keyPress.Key == ConsoleKey.B)
-                {
-                    Start();
-                }
-                if (keyPress.Key == ConsoleKey.Escape)
-                {
-                    Environment.Exit(0);
-                }
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine("<< * Back to main menu >>", Console.BackgroundColor);
+                Console.ReadKey(true);
+                if (true)
+                    {
+                    RunMainMenu();
+                    }
             }
             private void Help()
             {
@@ -618,16 +670,13 @@ namespace Snake
                 Console.WriteLine("Left-Arrow:  Move left");
                 Console.WriteLine("Spacebar:    Shoot!");
                 Console.WriteLine();
-                Console.WriteLine("Press B for back to main menu");
-                Console.WriteLine("Press Esc to quit");
-                keyPress = Console.ReadKey(true);
-                if (keyPress.Key == ConsoleKey.B)
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine("<< * Back to main menu >>", Console.BackgroundColor);
+                Console.ReadKey(true);
+                if (true)
                 {
-                    Start();
-                }
-                if (keyPress.Key == ConsoleKey.Escape)
-                {
-                    Environment.Exit(0);
+                    RunMainMenu();
                 }
             }
             private void ExitGame()
