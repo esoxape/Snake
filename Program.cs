@@ -160,7 +160,7 @@ namespace Snake
             mySnake.positions.Clear();
             Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
         }
-        public static void start_thread() //auto movement implement using thread method
+        public static void Start_thread() //auto movement implement using thread method
         {
             while (true)
             {
@@ -388,7 +388,7 @@ namespace Snake
             do
             {                
                 DrawBoard();
-                Thread th = new Thread(new ThreadStart(start_thread)); //implement thread
+                Thread th = new Thread(new ThreadStart(Start_thread)); //implement thread
                 th.Start();                
                 while (active==true)
                 {
@@ -429,7 +429,6 @@ namespace Snake
                 }
                 StartMenu();
             } while (activePlay == true);
-            
         }
     }
 }
