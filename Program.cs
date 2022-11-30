@@ -23,6 +23,7 @@ namespace Snake
         public static bool activePlay = true;
         public static int lastDirection = 0;
         public static bool shoot = false;
+        public static Timer timer;
         public static int moveCounter = 0;
         public static List<Bullet> activeBullets = new List<Bullet>();
         public enum Snake
@@ -157,7 +158,11 @@ namespace Snake
                     }
                     else if (board[i, j] == Snake.Fruit)
                     {
-                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Red);
+                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Blue);
+                    }
+                    if (board[i, j] == Snake.Monster)
+                    {
+                        Console.Write("M", Console.ForegroundColor = ConsoleColor.Red);
                     }
                     else if (board[i, j] == Snake.Shott)
                     {
@@ -279,6 +284,11 @@ namespace Snake
         {
             while (true)
             {
+<<<<<<< HEAD
+                
+                shootCounter = shootCounter + 1;
+                lastDirection = 0;
+=======
                 moveCounter = moveCounter + 1;
                 lastDirection = lastDirection - 1;
                 if (shoot == true)
@@ -303,7 +313,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -330,7 +341,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -357,7 +369,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -384,7 +397,8 @@ namespace Snake
                         {
                             BodyAdd();
                         }
-                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body)
+                        else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
+                                 board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
                         {
                             Score();
                             break;
@@ -496,6 +510,37 @@ namespace Snake
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
             }
         }
+        static void Monster(object o)
+        {
+            Random random = new Random();
+            int[,] array = new int[10000, 2];
+            int counter = 0;
+            int countMonster = 0;
+            bool check = false;
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (var j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i, j] == Snake.Monster)
+                    {
+                        countMonster++;
+                        if (countMonster == 6) check = true;
+                    }
+                    if (board[i, j] == Snake.Empty)
+                    {
+                        array[counter, 0] = i;
+                        array[counter, 1] = j;
+                        counter++;
+                    }
+                }
+            }
+            if (check == false)
+            {
+                int rng = random.Next(counter);
+                board[array[rng, 0], array[rng, 1]] = Snake.Monster;
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -509,6 +554,9 @@ namespace Snake
                 th.Start();
                 while (active == true)
                 {
+
+                    timer = new Timer(Monster, null, 0, 6000);
+
                     var key = Console.ReadKey().Key; // Read Key From Console
                                                      // Getting,Implementing arrow movements to work UP,DOWN,LEFT,RIGHT + stop from going oppisite way !=
                     if (key == ConsoleKey.UpArrow)
