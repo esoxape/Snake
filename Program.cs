@@ -361,7 +361,19 @@ namespace Snake
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("Help Page:");
+            Console.WriteLine($"_______    _______  _______________  _______         ___________\n" +
+                              $"|     |    |     |  |             |  |     |         |   ____   |\n" +
+                              $"|     |____|     |  |    _________|  |     |         |   |__|   |\n" +
+                              $"|                |  |    |_______    |     |         |     _____|\n" +
+                              $"|      ____      |  |    ________|   |     |_______  |     |\n" +
+                              $"|     |    |     |  |    |_________  |            |  |     |\n" +
+                              $"|_____|    |_____|  |_____________|  |____________|  |_____|\n");
+            Console.WriteLine($"Controls:");
+            Console.WriteLine("Up-Arrow:    Move up");
+            Console.WriteLine("Down-Arrow:  Move down");
+            Console.WriteLine("Right-Arrow: Move right");
+            Console.WriteLine("Left-Arrow:  Move left");
+            Console.WriteLine("Spacebar:    Shoot!");
             Console.WriteLine();
             Console.WriteLine("Press B for back to main menu");
             Console.WriteLine("Press Esc to quit");
