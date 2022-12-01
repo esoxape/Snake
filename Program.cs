@@ -23,8 +23,7 @@ namespace Snake
         public static bool active = true;
         public static bool activePlay = true;
         public static int lastDirection = 0;
-        public static bool shoot = false;
-        public static Timer timer;
+        public static bool shoot = false;        
         public static int moveCounter = 0;
         public static List<Bullet> activeBullets = new List<Bullet>();
         public static int wallCheck = 0;
@@ -306,6 +305,7 @@ namespace Snake
         }
         public static void EndGame()
         {
+            string printer;
             Random rand = new Random();
             int counter = 0;
         gogogo:
