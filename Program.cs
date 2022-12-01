@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml;
 
 namespace Snake
 {
@@ -82,10 +83,13 @@ namespace Snake
                         location[i, 1] = location[i, 1] - 1;
                     }
                 }
-                board[location[0, 0], location[0, 1]] = Snake.Boss;
-                board[location[1, 0], location[1, 1]] = Snake.Boss;
-                board[location[2, 0], location[2, 1]] = Snake.Boss;
-                board[location[3, 0], location[3, 1]] = Snake.Boss;
+                if (boss.hp > 0)
+                {
+                    board[location[0, 0], location[0, 1]] = Snake.Boss;
+                    board[location[1, 0], location[1, 1]] = Snake.Boss;
+                    board[location[2, 0], location[2, 1]] = Snake.Boss;
+                    board[location[3, 0], location[3, 1]] = Snake.Boss;
+                }
             }
         }
         public class Bullet
@@ -330,6 +334,17 @@ namespace Snake
             {                
                 board[activeBullets[remove].i, activeBullets[remove].j] = Snake.Empty;
                 score = score + 1;
+            }
+
+            if(board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Boss && boss.hp > 0)boss.hp--;
+            else if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Boss && boss.hp <= 0)
+            {
+                boss.hp--;
+                board[boss.location[0, 0], boss.location[0, 1]] = Snake.Empty;
+                board[boss.location[1, 0], boss.location[1, 1]] = Snake.Empty;
+                board[boss.location[2, 0], boss.location[2, 1]] = Snake.Empty;
+                board[boss.location[3, 0], boss.location[3, 1]] = Snake.Empty;
+                score=score + 100;
             }
 
             if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.WallDestroyable && wallCheck >3)
