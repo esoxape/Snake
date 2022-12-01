@@ -159,6 +159,11 @@ namespace Snake
 
         public static void LevelTwo()
         {
+            for(int i = 0; i < mySnake.positions.Count(); i++)
+            {
+                mySnake.positions[i].i = 1;
+                mySnake.positions[i].j = 15;
+            }
             boss.hp = 20;            
             {
                 for (int i = 0; i < board.GetLength(0); i++)
@@ -268,7 +273,7 @@ namespace Snake
                     }
                     else if (board[i,j] == Snake.WallDestroyable)
                     {
-                        if(wallCheck==0) Console.Write("@", Console.ForegroundColor = ConsoleColor.White);
+                        if (wallCheck == 0) Console.Write("@", Console.ForegroundColor = ConsoleColor.White);
                         if (wallCheck == 1) Console.Write("@", Console.ForegroundColor = ConsoleColor.Green);
                         if (wallCheck == 2) Console.Write("@", Console.ForegroundColor = ConsoleColor.DarkBlue);
                         if (wallCheck == 3) Console.Write("@", Console.ForegroundColor = ConsoleColor.Red);
@@ -282,9 +287,12 @@ namespace Snake
                 if (bossExplode % 2 == 0)
                 {
                     boardBoom[boss.location[0, 0], boss.location[0, 1]] = Snake.Explosion1;
-                    boardBoom[boss.location[1, 0], boss.location[1, 1]] = Snake.Explosion1;
-                    boardBoom[boss.location[2, 0], boss.location[2, 1]] = Snake.Explosion1;
+                    boardBoom[boss.location[2, 0], boss.location[2, 1]] = Snake.Explosion1;                    
+                }
+                else
+                {
                     boardBoom[boss.location[3, 0], boss.location[3, 1]] = Snake.Explosion1;
+                    boardBoom[boss.location[1, 0], boss.location[1, 1]] = Snake.Explosion1;
                 }
                 bossExplode++;
             }            
@@ -601,7 +609,11 @@ namespace Snake
                     bossmovement = 0;
                 }
 
-                if (Snake_Head_Position.i == board.GetLength(0) - 1 && Snake_Head_Position.j == 15) LevelTwo();
+                if (Snake_Head_Position.i == board.GetLength(0) - 1 && Snake_Head_Position.j == 15)
+                {
+                    LevelTwo();
+                    board[Snake_Head_Position.i, Snake_Head_Position.j] = Snake.Wall;
+                }
                 moveCounter = moveCounter + 1;
                 lastDirection = lastDirection - 1;
                 shootTimer = shootTimer - 1;
@@ -732,7 +744,7 @@ namespace Snake
                 }
                 BulletMove();
                 DrawBoard();
-                Thread.Sleep(Speed * 4); //apply speed
+                Thread.Sleep(Speed * 1); //apply speed
             }
         }
        
