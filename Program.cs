@@ -228,7 +228,6 @@ namespace Snake
                         {
                             boardBoom[i - 1, j - 1] = Snake.Explosion2;
                         }
-
                     }
                     else if (boardBoom[i, j] == Snake.Explosion2)
                     {
@@ -303,14 +302,13 @@ namespace Snake
             int counter = 0;
         gogogo:
             counter++;
-            if (counter < 29)
+            if (counter < 30)
             {
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
-                    for (int j = 0; j < board.GetLength(1); j++)
-                    {                        
-                        boardBoom[i,counter] = Snake.Explosion1;
-                    }
+                    int random = rand.Next(2);                                            
+                    if (random == 1)boardBoom[i,counter] = Snake.Explosion1;
+                    if (random == 1)boardBoom[i, board.GetLength(1)-counter] = Snake.Explosion1;                    
                 }
             }
             Console.Clear();
@@ -414,7 +412,7 @@ namespace Snake
                 Console.Write("Boss HP: ", Console.ForegroundColor = ConsoleColor.DarkRed);
                 for (int i = 0; i < boss.hp; i++) Console.Write("|");
             }
-            if (counter < 30) goto gogogo;
+            if (counter < 31) goto gogogo;
         }
         public static void BodyAdd()
         {
@@ -1064,7 +1062,6 @@ namespace Snake
                         }
                     }
                 } while (keyPressed != ConsoleKey.Enter);
-
                 return SelectedIndex;
             }
         }
