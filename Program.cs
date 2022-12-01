@@ -187,6 +187,7 @@ namespace Snake
         }
         public static void DrawBoard()
         {
+            string printer = "";
             Random rand = new Random();
             Console.Clear();
             Console.ResetColor();
@@ -240,7 +241,12 @@ namespace Snake
                     }
                     else if (board[i, j] == Snake.Empty)
                     {
-                        Console.Write(' ');
+                        if (board[i, j + 1] != Snake.Empty || boardBoom[i, j + 1] == Snake.Explosion1 || boardBoom[i, j + 1] == Snake.Explosion2)
+                        {
+                            Console.Write(printer + " ");
+                            printer = "";
+                        }
+                        else printer = printer + " ";
                     }
                     else if (board[i, j] == Snake.Wall)
                     {
@@ -305,7 +311,7 @@ namespace Snake
         }
         public static void EndGame()
         {
-            string printer;
+            string printer="";
             Random rand = new Random();
             int counter = 0;
         gogogo:
@@ -372,7 +378,12 @@ namespace Snake
                     }
                     else if (board[i, j] == Snake.Empty)
                     {
-                        Console.Write(' ');
+                        if (board[i, j + 1] != Snake.Empty || boardBoom[i,j+1] == Snake.Explosion1 || boardBoom[i, j + 1] == Snake.Explosion2)
+                        {
+                            Console.Write(printer + " ");
+                            printer = "";
+                        }
+                        else printer = printer + " ";
                     }
                     else if (board[i, j] == Snake.Wall)
                     {
@@ -546,7 +557,7 @@ namespace Snake
                         Explosion(i);
                         break;
                     }
-                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                    else if(board[activeBullets[i].i, activeBullets[i].j]!=Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
                 }
                 if (activeBullets[i].direction == 1)
                 {
@@ -562,7 +573,7 @@ namespace Snake
                         Explosion(i);
                         break;
                     }
-                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
                 }
                 if (activeBullets[i].direction == 2)
                 {
@@ -578,7 +589,7 @@ namespace Snake
                         Explosion(i);
                         break;
                     }
-                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
                 }
                 if (activeBullets[i].direction == 3)
                 {
@@ -594,7 +605,7 @@ namespace Snake
                         Explosion(i);
                         break;
                     }
-                    else board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
                 }
             }
         }
@@ -744,7 +755,7 @@ namespace Snake
                 }
                 BulletMove();
                 DrawBoard();
-                Thread.Sleep(Speed * 1); //apply speed
+                Thread.Sleep(Speed * 4); //apply speed
             }
         }
        
