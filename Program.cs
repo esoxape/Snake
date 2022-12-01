@@ -344,7 +344,11 @@ namespace Snake
                 board[boss.location[1, 0], boss.location[1, 1]] = Snake.Empty;
                 board[boss.location[2, 0], boss.location[2, 1]] = Snake.Empty;
                 board[boss.location[3, 0], boss.location[3, 1]] = Snake.Empty;
-                score=score + 100;
+                boardBoom[boss.location[0, 0], boss.location[0, 1]] = Snake.Explosion1;
+                boardBoom[boss.location[1, 0], boss.location[1, 1]] = Snake.Explosion1;
+                boardBoom[boss.location[2, 0], boss.location[2, 1]] = Snake.Explosion1;
+                boardBoom[boss.location[3, 0], boss.location[3, 1]] = Snake.Explosion1;
+                score =score + 100;
             }
 
             if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.WallDestroyable && wallCheck >3)
