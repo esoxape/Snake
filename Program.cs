@@ -557,7 +557,7 @@ namespace Snake
         }
        
 
-        private static void ChooseSpeed()
+        public static void ChooseSpeed()
         {
             if (Speed == 10)
             {
@@ -608,7 +608,7 @@ namespace Snake
                 board[array[rng, 0], array[rng, 1]] = Snake.Fruit;
             }
         }
-        static void Monster()
+        public static void Monster()
         {
             while (true)
             {
@@ -720,7 +720,7 @@ namespace Snake
                 RunMainMenu();
 
             }
-            private void RunMainMenu()
+            public void RunMainMenu()
             {
                 Console.ResetColor();
                 string prompt = "\r\n███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗     ██████╗  █████╗ ███╗   ███╗███████╗\r\n██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝\r\n███████╗██╔██╗ ██║███████║█████╔╝ █████╗      ██║  ███╗███████║██╔████╔██║█████╗  \r\n╚════██║██║╚██╗██║██╔══██║██╔═██╗ ██╔══╝      ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  \r\n███████║██║ ╚████║██║  ██║██║  ██╗███████╗    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗\r\n╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\r\n                                                                                  \r\n";
@@ -747,7 +747,7 @@ namespace Snake
                         break;
                 }
             }
-            private void ChangeSpeed()
+            public void ChangeSpeed()
             {
                 string prompt = "Choose speed:";
                 string[] options = { "Fast", "Medium", "Slow" };
@@ -768,7 +768,7 @@ namespace Snake
                 }
                 RunMainMenu();
             }
-            private void HighScore()
+            public void HighScore()
             {
                 Console.Clear();
                 Console.WriteLine();
@@ -785,7 +785,7 @@ namespace Snake
                     RunMainMenu();
                 }
             }
-            private void Help()
+            public void Help()
             {
                 Console.Clear();
                 Console.WriteLine();
@@ -812,7 +812,7 @@ namespace Snake
                     RunMainMenu();
                 }
             }
-            private void ExitGame()
+            public void ExitGame()
             {
                 Console.WriteLine("Press any key to exit....");
                 Console.ReadKey(true);
@@ -830,7 +830,7 @@ namespace Snake
                 Options = options;
                 SelectedIndex = 0;
             }
-            private void DisplayOptions()
+            public void DisplayOptions()
             {
                 Console.WriteLine(Prompt);
                 Console.WriteLine();
