@@ -297,6 +297,125 @@ namespace Snake
                 for (int i = 0; i < boss.hp; i++) Console.Write("|");
             }
         }
+        public static void EndGame()
+        {
+            Random rand = new Random();
+            int counter = 0;
+        gogogo:
+            counter++;
+            if (counter < 29)
+            {
+                for (int i = 0; i < board.GetLength(0); i++)
+                {
+                    for (int j = 0; j < board.GetLength(1); j++)
+                    {                        
+                        boardBoom[i,counter] = Snake.Explosion1;
+                    }
+                }
+            }
+            Console.Clear();
+            Console.ResetColor();
+            Console.WriteLine($"Player name: {playerName}");
+            Console.WriteLine($"score: {score}");
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    if (boardBoom[i, j] == Snake.Explosion1)
+                    {
+                        Console.Write("#", Console.ForegroundColor = ConsoleColor.Red);
+                        boardBoom[i, j] = Snake.Explosion2;
+                        if (i + 1 < board.GetLength(0) && boardBoom[i + 1, j] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i + 1, j] = Snake.Explosion2;
+                        }
+                        if (i + 1 < board.GetLength(0) && j + 1 < board.GetLength(1) && boardBoom[i + 1, j + 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i + 1, j + 1] = Snake.Explosion2;
+                        }
+                        if (j + 1 < board.GetLength(1) && boardBoom[i, j + 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i, j + 1] = Snake.Explosion2;
+                        }
+                        if (j - 1 > -1 && boardBoom[i, j - 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i, j - 1] = Snake.Explosion2;
+                        }
+                        if (i - 1 > -1 && boardBoom[i - 1, j] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i - 1, j] = Snake.Explosion2;
+                        }
+                        if (i - 1 > -1 && j + 1 < board.GetLength(1) && boardBoom[i - 1, j + 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i - 1, j + 1] = Snake.Explosion2;
+                        }
+                        if (i + 1 < board.GetLength(0) && j - 1 > -1 && boardBoom[i + 1, j - 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i + 1, j - 1] = Snake.Explosion2;
+                        }
+                        if (i - 1 > -1 && j - 1 > -1 && boardBoom[i - 1, j - 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i - 1, j - 1] = Snake.Explosion2;
+                        }
+
+                    }
+                    else if (boardBoom[i, j] == Snake.Explosion2)
+                    {
+                        Console.Write("#", Console.ForegroundColor = ConsoleColor.Yellow);
+                        boardBoom[i, j] = Snake.Empty;
+                    }
+                    else if (board[i, j] == Snake.Empty)
+                    {
+                        Console.Write(' ');
+                    }
+                    else if (board[i, j] == Snake.Wall)
+                    {
+                        Console.Write("@", Console.ForegroundColor = ConsoleColor.Magenta);
+                    }
+                    else if (board[i, j] == Snake.Head)
+                    {
+                        Console.Write("O", Console.ForegroundColor = ConsoleColor.Green);
+                    }
+                    else if (board[i, j] == Snake.Body)
+                    {
+                        Console.Write("o", Console.ForegroundColor = ConsoleColor.DarkGreen);
+                    }
+                    else if (board[i, j] == Snake.Fruit)
+                    {
+                        Console.Write("*", Console.ForegroundColor = ConsoleColor.Blue);
+                    }
+                    else if (board[i, j] == Snake.Monster)
+                    {
+                        Console.Write("M", Console.ForegroundColor = ConsoleColor.Red);
+                    }
+                    else if (board[i, j] == Snake.Shott)
+                    {
+                        Console.Write("¤", Console.ForegroundColor = ConsoleColor.Yellow);
+                    }
+                    else if (board[i, j] == Snake.Boss)
+                    {
+                        Console.Write("B", Console.ForegroundColor = ConsoleColor.DarkRed);
+                    }
+                    else if (board[i, j] == Snake.WallDestroyable)
+                    {
+                        if (wallCheck == 0) Console.Write("@", Console.ForegroundColor = ConsoleColor.White);
+                        if (wallCheck == 1) Console.Write("@", Console.ForegroundColor = ConsoleColor.Green);
+                        if (wallCheck == 2) Console.Write("@", Console.ForegroundColor = ConsoleColor.DarkBlue);
+                        if (wallCheck == 3) Console.Write("@", Console.ForegroundColor = ConsoleColor.Red);
+                        if (wallCheck == 4) Console.Write("@", Console.ForegroundColor = ConsoleColor.Yellow);
+                    }
+                }
+                Console.WriteLine();
+            }
+            if (mySnake.positions.Count == 0) Console.WriteLine($"Ammo: {ammo} BodySize: {mySnake.positions.Count}", Console.ForegroundColor = ConsoleColor.White);
+            else Console.WriteLine($"Ammo: {ammo} BodySize: {mySnake.positions.Count - 1}", Console.ForegroundColor = ConsoleColor.White);
+            if (boss.hp > 0)
+            {
+                Console.Write("Boss HP: ", Console.ForegroundColor = ConsoleColor.DarkRed);
+                for (int i = 0; i < boss.hp; i++) Console.Write("|");
+            }
+            if (counter < 30) goto gogogo;
+        }
         public static void BodyAdd()
         {
             if(ammo==0 && mySnake.positions.Count()==0)ammo=10;
@@ -345,11 +464,12 @@ namespace Snake
                 using StreamWriter file = new("scores.txt");
                 file.WriteLine(line);
                 file.Close();
-            }
-            ResetBoard();
+            }            
             mySnake.positions.Clear();
             Console.WriteLine();
+            EndGame();
             Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
+            ResetBoard();
         }
         public static void Shoot()
         {
