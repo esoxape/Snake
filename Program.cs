@@ -30,15 +30,15 @@ namespace Snake
         public static Boss boss = new Boss();
         public enum Snake
         {
-            Empty,       // 0
-            Wall,        // 1
-            Fruit,       // 2
-            Body,        // 3
-            Head,        // 4
-            Monster,     // 5
-            Shott,       // 6
-            Explosion1,  // 7
-            Explosion2,  // 8
+            Empty,                   // 0
+            Wall,                 // 1
+            Fruit,                 // 2
+            Body,                 // 3
+            Head,                // 4
+            Monster,             // 5
+            Shott,               // 6
+            Explosion1,         // 7
+            Explosion2,         // 8
             WallDestroyable,
             Boss
         }
