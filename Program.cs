@@ -29,19 +29,20 @@ namespace Snake
         public static List<Bullet> activeBullets = new List<Bullet>();
         public static int wallCheck = 0;
         public static Boss boss = new Boss();
+        public static int bossExplode = 100;        
         public enum Snake
         {
-            Empty,                   // 0
+            Empty,                // 0
             Wall,                 // 1
-            Fruit,                 // 2
+            Fruit,                // 2
             Body,                 // 3
             Head,                // 4
             Monster,             // 5
             Shott,               // 6
             Explosion1,         // 7
             Explosion2,         // 8
-            WallDestroyable,
-            Boss
+            WallDestroyable,    // 9
+            Boss                // 10
         }
         public class Boss
         {
@@ -180,6 +181,7 @@ namespace Snake
         }
         public static void DrawBoard()
         {
+            Random rand = new Random();
             Console.Clear();
             Console.ResetColor();
             Console.WriteLine($"Player name: {playerName}");
@@ -192,25 +194,37 @@ namespace Snake
                     {
                         Console.Write("#", Console.ForegroundColor = ConsoleColor.Red);
                         boardBoom[i, j] = Snake.Explosion2;
-                        if (i + 1 < board.GetLength(0))
+                        if (i + 1 < board.GetLength(0) && boardBoom[i+1,j]!=Snake.Explosion1 && rand.Next(10)>3)
                         {
                             boardBoom[i + 1, j] = Snake.Explosion2;
                         }
-                        if (i + 1 < board.GetLength(0) && j + 1 < board.GetLength(1))
+                        if (i + 1 < board.GetLength(0) && j + 1 < board.GetLength(1) && boardBoom[i+1, j+1] != Snake.Explosion1 && rand.Next(10) > 3)
                         {
                             boardBoom[i + 1, j + 1] = Snake.Explosion2;
                         }
-                        if (j + 1 < board.GetLength(1))
+                        if (j + 1 < board.GetLength(1) && boardBoom[i, j+1] != Snake.Explosion1 && rand.Next(10) > 3)
                         {
                             boardBoom[i, j + 1] = Snake.Explosion2;
                         }
-                        if (j - 1 > -1)
+                        if (j - 1 > -1 && boardBoom[i, j-1] != Snake.Explosion1 && rand.Next(10) > 3)
                         {
                             boardBoom[i, j - 1] = Snake.Explosion2;
                         }
-                        if (i - 1 > -1)
+                        if (i - 1 > -1 && boardBoom[i-1, j] != Snake.Explosion1 && rand.Next(10) > 3)
                         {
                             boardBoom[i - 1, j] = Snake.Explosion2;
+                        }
+                        if (i - 1 > -1 && j + 1 < board.GetLength(1) && boardBoom[i - 1, j + 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i - 1, j + 1] = Snake.Explosion2;
+                        }
+                        if (i + 1 < board.GetLength(0) && j - 1 > -1 && boardBoom[i + 1, j - 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i + 1, j - 1] = Snake.Explosion2;
+                        }
+                        if (i - 1> -1 && j - 1 > -1 && boardBoom[i - 1, j - 1] != Snake.Explosion1 && rand.Next(10) > 3)
+                        {
+                            boardBoom[i - 1, j - 1] = Snake.Explosion2;
                         }
 
                     }
@@ -261,6 +275,17 @@ namespace Snake
                     }
                 }
                 Console.WriteLine();
+            }
+            if (bossExplode < 30)
+            {
+                if (bossExplode % 2 == 0)
+                {
+                    boardBoom[boss.location[0, 0], boss.location[0, 1]] = Snake.Explosion1;
+                    boardBoom[boss.location[1, 0], boss.location[1, 1]] = Snake.Explosion1;
+                    boardBoom[boss.location[2, 0], boss.location[2, 1]] = Snake.Explosion1;
+                    boardBoom[boss.location[3, 0], boss.location[3, 1]] = Snake.Explosion1;
+                }
+                bossExplode++;
             }
             if (boss.hp > 0)
             {
@@ -349,6 +374,7 @@ namespace Snake
                 boardBoom[boss.location[2, 0], boss.location[2, 1]] = Snake.Explosion1;
                 boardBoom[boss.location[3, 0], boss.location[3, 1]] = Snake.Explosion1;
                 score =score + 100;
+                bossExplode = 0;
             }
 
             if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.WallDestroyable && wallCheck >3)
