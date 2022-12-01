@@ -449,7 +449,8 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
-                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Boss)
                         {
                             Score();
                             break;
@@ -478,7 +479,8 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
-                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Boss)
                         {
                             Score();
                             break;
@@ -507,7 +509,8 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
-                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster ||
+                                board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Boss)
                         {
                             Score();
                             break;
@@ -536,7 +539,8 @@ namespace Snake
                             BodyAdd();
                         }
                         else if (board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Body ||
-                                 board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster)
+                                 board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Monster ||
+                                 board[Snake_Head_Position.i, Snake_Head_Position.j] == Snake.Boss)
                         {
                             Score();
                             break;
