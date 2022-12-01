@@ -29,7 +29,9 @@ namespace Snake
         public static List<Bullet> activeBullets = new List<Bullet>();
         public static int wallCheck = 0;
         public static Boss boss = new Boss();
-        public static int bossExplode = 100;        
+        public static int bossExplode = 100;
+        public static int ammo = 0;
+        public static int shootTimer = 0;
         public enum Snake
         {
             Empty,                // 0
@@ -286,7 +288,9 @@ namespace Snake
                     boardBoom[boss.location[3, 0], boss.location[3, 1]] = Snake.Explosion1;
                 }
                 bossExplode++;
-            }
+            }            
+            if (mySnake.positions.Count==0) Console.WriteLine($"Ammo: {ammo} BodySize: {mySnake.positions.Count}", Console.ForegroundColor = ConsoleColor.White);
+            else Console.WriteLine($"Ammo: {ammo} BodySize: {mySnake.positions.Count-1}", Console.ForegroundColor=ConsoleColor.White);            
             if (boss.hp > 0)
             {
                 Console.Write("Boss HP: ", Console.ForegroundColor = ConsoleColor.DarkRed);
@@ -295,6 +299,7 @@ namespace Snake
         }
         public static void BodyAdd()
         {
+            if(ammo==0 && mySnake.positions.Count()==0)ammo=10;
             Position M = new Position(Snake_Head_Position.i, Snake_Head_Position.j);
             mySnake.positions.Add(M);
             if (mySnake.positions.Count == 1) mySnake.positions.Add(M);
@@ -350,6 +355,17 @@ namespace Snake
         {
             Bullet M = new Bullet(direction, Snake_Head_Position.i, Snake_Head_Position.j);
             activeBullets.Add(M);
+            ammo--;
+            if (ammo == 0 && mySnake.positions.Count() == 2)
+            {
+                ammo = 10;
+                mySnake.positions.Clear();
+            }
+            else if (ammo == 0 && mySnake.positions.Count()>1)
+            {               
+                ammo = 10;
+                mySnake.positions.RemoveAt(0);
+            }
         }
         public static void Explosion(int remove)
         {
@@ -470,7 +486,8 @@ namespace Snake
                 if (Snake_Head_Position.i == board.GetLength(0) - 1 && Snake_Head_Position.j == 15) LevelTwo();
                 moveCounter = moveCounter + 1;
                 lastDirection = lastDirection - 1;
-                if (shoot == true)
+                shootTimer = shootTimer - 1;
+                if (shoot == true && ammo >0)
                 {
                     shoot = false;
                     Shoot();
@@ -749,9 +766,10 @@ namespace Snake
                             lastDirection = 3;
                         }
                     }
-                    else if (key == ConsoleKey.Spacebar)
+                    else if (key == ConsoleKey.Spacebar && shootTimer<1)
                     {
                         shoot = true;
+                        shootTimer= 3;
                     }
                 }
                 myGame.Start();
