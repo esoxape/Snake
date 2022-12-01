@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Snake
 {
@@ -45,6 +46,47 @@ namespace Snake
         {
             public int[,] location = { {18, 14},{18,15}, { 17, 14 }, { 17, 15 } };
             public int hp = 0;
+            public void Move()
+            {
+                board[location[0, 0], location[0, 1]] = Snake.Empty;
+                board[location[1, 0], location[1, 1]] = Snake.Empty;
+                board[location[2, 0], location[2, 1]] = Snake.Empty;
+                board[location[3, 0], location[3, 1]] = Snake.Empty;
+                if (Snake_Head_Position.i - location[0,0]<0)
+                {
+                    for(int i=0; i<4; i++)
+                    {
+                        location[i,0]=location[i,0]-1; 
+                    }
+
+                }
+                else if (Snake_Head_Position.i - location[0, 0]> 0)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        location[i, 0] = location[i, 0] + 1;
+                    }
+
+                }
+                else if (Snake_Head_Position.j - location[1, 1] > 0)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        location[i, 1] = location[i, 1] + 1;
+                    }
+                }
+                else if (Snake_Head_Position.j - location[1, 1] < 0)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        location[i, 1] = location[i, 1] - 1;
+                    }
+                }
+                board[location[0, 0], location[0, 1]] = Snake.Boss;
+                board[location[1, 0], location[1, 1]] = Snake.Boss;
+                board[location[2, 0], location[2, 1]] = Snake.Boss;
+                board[location[3, 0], location[3, 1]] = Snake.Boss;
+            }
         }
         public class Bullet
         {
@@ -88,6 +130,7 @@ namespace Snake
         {
             score = 0;
             direction = 2;
+            boss.hp = 0;
             {
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
@@ -109,7 +152,7 @@ namespace Snake
 
         public static void LevelTwo()
         {
-            boss.hp = 20;
+            boss.hp = 20;            
             {
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
@@ -208,7 +251,7 @@ namespace Snake
                     {
                         if(wallCheck==0) Console.Write("@", Console.ForegroundColor = ConsoleColor.White);
                         if (wallCheck == 1) Console.Write("@", Console.ForegroundColor = ConsoleColor.Green);
-                        if (wallCheck == 2) Console.Write("@", Console.ForegroundColor = ConsoleColor.Black);
+                        if (wallCheck == 2) Console.Write("@", Console.ForegroundColor = ConsoleColor.DarkBlue);
                         if (wallCheck == 3) Console.Write("@", Console.ForegroundColor = ConsoleColor.Red);
                         if (wallCheck == 4) Console.Write("@", Console.ForegroundColor = ConsoleColor.Yellow);
                     }
@@ -271,6 +314,7 @@ namespace Snake
             }
             ResetBoard();
             mySnake.positions.Clear();
+            Console.WriteLine();
             Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
         }
         public static void Shoot()
@@ -369,8 +413,15 @@ namespace Snake
         }
         public static void Start_thread() //auto movement implement using thread method
         {
+            int bossmovement = 0;
             while (true)
             {
+                if (bossmovement > 3 && boss.hp>0)
+                {
+                    boss.Move();
+                    bossmovement = 0;
+                }
+
                 if (Snake_Head_Position.i == board.GetLength(0) - 1 && Snake_Head_Position.j == 15) LevelTwo();
                 moveCounter = moveCounter + 1;
                 lastDirection = lastDirection - 1;
@@ -381,6 +432,7 @@ namespace Snake
                 }
                 if (direction == snake_direction.Up && moveCounter == 3)
                 {
+                    bossmovement = bossmovement+1;
                     moveCounter = 0;
                     // goto UP
                     if (board[Snake_Head_Position.i-1, Snake_Head_Position.j] == Snake.Wall)
@@ -409,6 +461,7 @@ namespace Snake
                 }
                 else if (direction == snake_direction.Right && moveCounter == 3)
                 {
+                    bossmovement = bossmovement + 1;
                     moveCounter = 0;
                     // goto right
                     if (board[Snake_Head_Position.i, Snake_Head_Position.j+1] == Snake.Wall)
@@ -437,6 +490,7 @@ namespace Snake
                 }
                 else if (direction == snake_direction.Down && moveCounter == 3)
                 {
+                    bossmovement = bossmovement + 1;
                     moveCounter = 0;
                     // goto down
                     if (board[Snake_Head_Position.i + 1, Snake_Head_Position.j] == Snake.Wall)
@@ -465,6 +519,7 @@ namespace Snake
                 }
                 else if (direction == snake_direction.Left && moveCounter == 3)
                 {
+                    bossmovement = bossmovement + 1;
                     moveCounter = 0;
                     // goto left
                     if (board[Snake_Head_Position.i, Snake_Head_Position.j-1] == Snake.Wall)
@@ -496,50 +551,7 @@ namespace Snake
                 Thread.Sleep(Speed * 4); //apply speed
             }
         }
-        static void StartMenu()
-        {
-        start:
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine("---------------------------------------------");
-            Console.WriteLine("--------------Welcome to snake---------------");
-            Console.WriteLine("---------------------------------------------");
-            Console.WriteLine();
-            Console.WriteLine("Press P to play");
-            Console.WriteLine();
-            Console.WriteLine("Press L to high score list");
-            Console.WriteLine("Press H to help");
-            Console.WriteLine("Press M to change speed");
-            Console.WriteLine("Press Esc to quit");
-            if (Speed == 10)
-            {
-                Console.WriteLine("Speed: Fast");
-            }
-            else if (Speed == 30)
-            {
-                Console.WriteLine("Speed: Medium");
-            }
-            else if (Speed == 50)
-            {
-                Console.WriteLine("Speed: Slow");
-            }
-            keyPress = Console.ReadKey(true);
-
-            if (keyPress.Key == ConsoleKey.M)
-            {
-                ChooseSpeed();
-            }
-            else if (keyPress.Key == ConsoleKey.Escape)
-            {
-                Environment.Exit(0);
-            }
-            else if (keyPress.Key == ConsoleKey.P)
-            {
-                PlayerName();
-            }
-            else goto start;
-            Console.WriteLine();
-        }
+       
 
         private static void ChooseSpeed()
         {
@@ -554,8 +566,7 @@ namespace Snake
             else if (Speed == 50)
             {
                 Speed = 10;
-            }
-            StartMenu();
+            }            
         }
 
         static void PlayerName()
@@ -709,7 +720,7 @@ namespace Snake
             {
                 Console.ResetColor();
                 string prompt = "\r\n███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗     ██████╗  █████╗ ███╗   ███╗███████╗\r\n██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝\r\n███████╗██╔██╗ ██║███████║█████╔╝ █████╗      ██║  ███╗███████║██╔████╔██║█████╗  \r\n╚════██║██║╚██╗██║██╔══██║██╔═██╗ ██╔══╝      ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  \r\n███████║██║ ╚████║██║  ██║██║  ██╗███████╗    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗\r\n╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\r\n                                                                                  \r\n";
-                string[] options = { "Play", "Highscore", "Help", "Exit" };
+                string[] options = { "Play", "Highscore", "Help", "Change speed", "Exit" };
                 Menu mainMenu = new Menu(prompt, options);
                 int selectedIndex = mainMenu.Run();
 
@@ -725,9 +736,33 @@ namespace Snake
                         Help();
                         break;
                     case 3:
+                        ChangeSpeed();
+                        break;
+                    case 4:
                         ExitGame();
                         break;
                 }
+            }
+            private void ChangeSpeed()
+            {
+                string prompt = "Choose speed:";
+                string[] options = { "Fast", "Medium", "Slow" };
+                Menu speed = new Menu(prompt, options);
+                int selectedIndex = speed.Run();
+
+                switch (selectedIndex)
+                {
+                    case 0:
+                        Speed = 5;
+                        break;
+                    case 1:
+                        Speed = 30;
+                        break;
+                    case 2:
+                        Speed = 60;
+                        break;
+                }
+                RunMainMenu();
             }
             private void HighScore()
             {
@@ -794,6 +829,7 @@ namespace Snake
             private void DisplayOptions()
             {
                 Console.WriteLine(Prompt);
+                Console.WriteLine();
                 for (int i = 0; i < Options.Length; i++)
                 {
                     string currentOption = Options[i];
