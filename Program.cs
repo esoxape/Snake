@@ -31,7 +31,8 @@ namespace Snake
         public static int bossExplode = 100;
         public static int ammo = 0;
         public static int shootTimer = 0;
-        public static HighScoreList[] highScore=new HighScoreList[10]; 
+        public static HighScoreList[] highScore=new HighScoreList[10];
+        public static bool isDead = false;
         public enum Snake
         {
             Empty,                // 0
@@ -50,6 +51,7 @@ namespace Snake
         {
             public int[,] location = { {18, 14},{18,15}, { 17, 14 }, { 17, 15 } };
             public int hp = 0;
+            public int fire=0;
             public bool Move()
             {
                 board[location[0, 0], location[0, 1]] = Snake.Empty;
@@ -90,10 +92,73 @@ namespace Snake
                 }
                 return false;
             }
-            public static void Shoot()
+            public void Shoot()
             {
-                Bullet M = new Bullet(direction, Snake_Head_Position.i, Snake_Head_Position.j);
-                activeBulletsBoss.Add(M);
+                if (fire == 0)
+                {
+                    Bullet M = new Bullet(0, location[0, 0] - 1, location[0, 1]);
+                    activeBullets.Add(M);
+                    M = new Bullet(0, location[1, 0] - 1, location[1, 1]);
+                    activeBullets.Add(M);
+                }
+                else if(fire == 1)
+                {
+                    Bullet M = new Bullet(1, location[3, 0], location[3, 1]+1);
+                    activeBullets.Add(M);
+                    M = new Bullet(1, location[1, 0], location[1, 1]+1);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 2)
+                {
+                    Bullet M = new Bullet(2, location[2, 0] + 1, location[2, 1]);
+                    activeBullets.Add(M);
+                    M = new Bullet(2, location[3, 0] + 1, location[3, 1]);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 3)
+                {
+                    Bullet M = new Bullet(3, location[0, 0] - 1, location[0, 1]);
+                    activeBullets.Add(M);
+                    M = new Bullet(3, location[2, 0] - 1, location[2, 1]);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 4)
+                {
+                    Bullet M = new Bullet(4, location[0, 0] - 1, location[0, 1]-1);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 5)
+                {
+                    Bullet M = new Bullet(5, location[1, 0] -1, location[1, 1] + 1);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 6)
+                {
+                    Bullet M = new Bullet(6, location[3, 0] + 1, location[3, 1] + 1);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 7)
+                {
+                    Bullet M = new Bullet(7, location[2, 0] + 1, location[2, 1] - 1);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 9)
+                {
+                    Bullet M = new Bullet(4, location[0, 0] - 1, location[0, 1] - 1);
+                    activeBullets.Add(M);
+                    M = new Bullet(5, location[1, 0] - 1, location[1, 1] + 1);
+                    activeBullets.Add(M);
+                }
+                else if (fire == 11)
+                {
+                    Bullet M = new Bullet(6, location[3, 0] + 1, location[3, 1] + 1);
+                    activeBullets.Add(M);
+                    M = new Bullet(7, location[2, 0] + 1, location[2, 1] - 1);
+                    activeBullets.Add(M);
+                }
+
+                fire++;
+                if (fire == 12) fire = 0;
             }
         }
         public class Bullet
@@ -479,7 +544,8 @@ namespace Snake
         }
         public static void Score()
         {
-            
+            activeBullets.Clear();
+            ammo = 0;
             active = false;
             if (score > highScore[9].score)
             {
@@ -497,6 +563,7 @@ namespace Snake
             mySnake.positions.Clear();
             Console.WriteLine();
             EndGame();
+            Console.WriteLine();
             Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
             ResetBoard();
             
@@ -526,8 +593,9 @@ namespace Snake
                 board[activeBullets[remove].i, activeBullets[remove].j] = Snake.Empty;
                 score = score + 1;
             }
+            if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Body || board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Head) isDead = true;
 
-            if(board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Boss && boss.hp > 0)boss.hp--;
+            if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Boss && boss.hp > 0)boss.hp--;
             else if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.Boss && boss.hp <= 0)
             {
                 boss.hp--;
@@ -550,7 +618,7 @@ namespace Snake
             }
             else if (board[activeBullets[remove].i, activeBullets[remove].j] == Snake.WallDestroyable) wallCheck = wallCheck + 1;
 
-            activeBullets.RemoveAt(remove);
+            activeBullets.RemoveAt(remove);            
         }
         public static void BulletMove()
         {
@@ -620,7 +688,91 @@ namespace Snake
                     }
                     else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
                 }
-            }
+                if (activeBullets[i].direction == 4)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    if (activeBullets[i].j == 0)
+                    {
+                        activeBullets.RemoveAt(i);
+                        break;
+                    }
+                    else
+                    {
+                        activeBullets[i].j = activeBullets[i].j - 1;
+                        activeBullets[i].i = activeBullets[i].i - 1;
+                    }
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+                if (activeBullets[i].direction == 5)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    if (activeBullets[i].j == 0)
+                    {
+                        activeBullets.RemoveAt(i);
+                        break;
+                    }
+                    else
+                    {
+                        activeBullets[i].j = activeBullets[i].j + 1;
+                        activeBullets[i].i = activeBullets[i].i -1;
+                    }
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+                if (activeBullets[i].direction == 6)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    if (activeBullets[i].j == 0)
+                    {
+                        activeBullets.RemoveAt(i);
+                        break;
+                    }
+                    else
+                    {
+                        activeBullets[i].j = activeBullets[i].j + 1;
+                        activeBullets[i].i = activeBullets[i].i + 1;
+                    }
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+
+
+
+
+                if (activeBullets[i].direction == 7)
+                {
+                    if (board[activeBullets[i].i, activeBullets[i].j] == Snake.Shott) board[activeBullets[i].i, activeBullets[i].j] = Snake.Empty;
+                    if (activeBullets[i].j == 0)
+                    {
+                        activeBullets.RemoveAt(i);
+                        break;
+                    }
+                    else
+                    {
+                        activeBullets[i].j = activeBullets[i].j - 1;
+                        activeBullets[i].i = activeBullets[i].i + 1;
+                    }
+                    if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Empty && board[activeBullets[i].i, activeBullets[i].j] != Snake.Head)
+                    {
+                        Explosion(i);
+                        break;
+                    }
+                    else if (board[activeBullets[i].i, activeBullets[i].j] != Snake.Head) board[activeBullets[i].i, activeBullets[i].j] = Snake.Shott;
+                }
+            }            
         }
         public static void Start_thread() //auto movement implement using thread method
         {
@@ -636,6 +788,7 @@ namespace Snake
                         Score();
                         break;
                     }
+                    boss.Shoot();
                 }
 
                 if (Snake_Head_Position.i == board.GetLength(0) - 1 && Snake_Head_Position.j == 15)
@@ -773,6 +926,12 @@ namespace Snake
                 }
                 BulletMove();
                 DrawBoard();
+                if(isDead==true)
+                {
+                    isDead=false;
+                    Score();
+                    break;
+                }
                 Thread.Sleep(Speed * 4); //apply speed
             }
         }
