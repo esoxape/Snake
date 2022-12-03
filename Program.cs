@@ -51,7 +51,7 @@ namespace Snake
         {
             public int[,] location = { {18, 14},{18,15}, { 17, 14 }, { 17, 15 } };
             public int hp = 0;
-            public int fire=0;
+            public int fire=1;
             public bool Move()
             {
                 board[location[0, 0], location[0, 1]] = Snake.Empty;
