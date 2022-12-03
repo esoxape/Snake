@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
+using System.Xml.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Snake
 {
@@ -14,9 +16,7 @@ namespace Snake
         public static Snake[,] board = new Snake[20, 30];
         public static Snake[,] boardBoom = new Snake[20, 30];
         public static int direction = 1; //0=north-up, 1=east-right, 2=south-down, 3=west-left
-        public static int score = 0;
-        public static int highScore = 0;
-        public static string highScoreName = "";
+        public static int score = 0;        
         public static string playerName = "";
         public static int Speed = 10; //speed of snake movement (lower to increase speed)
         public static ConsoleKeyInfo keyPress = new ConsoleKeyInfo();
@@ -31,6 +31,7 @@ namespace Snake
         public static int bossExplode = 100;
         public static int ammo = 0;
         public static int shootTimer = 0;
+        public static HighScoreList[] highScore=new HighScoreList[10]; 
         public enum Snake
         {
             Empty,                // 0
@@ -49,7 +50,7 @@ namespace Snake
         {
             public int[,] location = { {18, 14},{18,15}, { 17, 14 }, { 17, 15 } };
             public int hp = 0;
-            public void Move()
+            public bool Move()
             {
                 board[location[0, 0], location[0, 1]] = Snake.Empty;
                 board[location[1, 0], location[1, 1]] = Snake.Empty;
@@ -71,27 +72,28 @@ namespace Snake
                     }
 
                 }
-                else if (Snake_Head_Position.j - location[1, 1] > 0)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        location[i, 1] = location[i, 1] + 1;
-                    }
-                }
-                else if (Snake_Head_Position.j - location[1, 1] < 0)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        location[i, 1] = location[i, 1] - 1;
-                    }
-                }
+
                 if (boss.hp > 0)
                 {
+                    if (board[location[0, 0], location[0, 1]] == Snake.Body || board[location[1, 0], location[1, 1]] == Snake.Body || board[location[2, 0], location[2, 1]] == Snake.Body || board[location[3, 0], location[3, 1]] == Snake.Body)
+                    {
+                        board[location[0, 0], location[0, 1]] = Snake.Boss;
+                        board[location[1, 0], location[1, 1]] = Snake.Boss;
+                        board[location[2, 0], location[2, 1]] = Snake.Boss;
+                        board[location[3, 0], location[3, 1]] = Snake.Boss;
+                        return true;
+                    }
                     board[location[0, 0], location[0, 1]] = Snake.Boss;
                     board[location[1, 0], location[1, 1]] = Snake.Boss;
                     board[location[2, 0], location[2, 1]] = Snake.Boss;
                     board[location[3, 0], location[3, 1]] = Snake.Boss;
                 }
+                return false;
+            }
+            public static void Shoot()
+            {
+                Bullet M = new Bullet(direction, Snake_Head_Position.i, Snake_Head_Position.j);
+                activeBulletsBoss.Add(M);
             }
         }
         public class Bullet
@@ -131,6 +133,11 @@ namespace Snake
         {
             public static int i = 0;
             public static int j = 0;
+        }
+        public class HighScoreList
+        {
+            public int score = 0;
+            public string name = "";
         }
         public static void ResetBoard()
         {
@@ -305,7 +312,7 @@ namespace Snake
             else Console.WriteLine($"Ammo: {ammo} BodySize: {mySnake.positions.Count-1}", Console.ForegroundColor=ConsoleColor.White);            
             if (boss.hp > 0)
             {
-                Console.Write("Boss HP: ", Console.ForegroundColor = ConsoleColor.DarkRed);
+                Console.WriteLine("Boss HP: ", Console.ForegroundColor = ConsoleColor.DarkRed);
                 for (int i = 0; i < boss.hp; i++) Console.Write("|");
             }
         }
@@ -472,14 +479,19 @@ namespace Snake
         }
         public static void Score()
         {
+            
             active = false;
-            if (score > highScore)
+            if (score > highScore[9].score)
             {
-                highScore = score;
-                highScoreName = playerName;
-                String line = highScoreName + ";" + highScore;
+                highScore[9].score = score;
+                highScore[9].name = playerName;
+                SortScore(highScore);
                 using StreamWriter file = new("scores.txt");
-                file.WriteLine(line);
+                for (int i = 0; i < highScore.Length; i++)
+                {
+                    String line = highScore[i].name + ";" + highScore[i].score;
+                    file.WriteLine(line);
+                }
                 file.Close();
             }            
             mySnake.positions.Clear();
@@ -487,6 +499,7 @@ namespace Snake
             EndGame();
             Console.WriteLine("Du dog!!!! Tryck på valfri knapp för att komma vidare");
             ResetBoard();
+            
         }
         public static void Shoot()
         {
@@ -616,8 +629,13 @@ namespace Snake
             {
                 if (bossmovement > 3 && boss.hp>0)
                 {
-                    boss.Move();
+                    bool dead= boss.Move();                    
                     bossmovement = 0;
+                    if(dead==true)
+                    {
+                        Score();
+                        break;
+                    }
                 }
 
                 if (Snake_Head_Position.i == board.GetLength(0) - 1 && Snake_Head_Position.j == 15)
@@ -781,6 +799,7 @@ namespace Snake
             Console.Clear();
             Console.Write("Your name: ");
             playerName = Console.ReadLine();
+            if (playerName == "") playerName = "Player";
             active = true;
         }
 
@@ -844,21 +863,50 @@ namespace Snake
                 }
                 Thread.Sleep(random.Next(5000, 10000));
             }
-        }
-
-        static void Main(string[] args)
+        }       
+        public static void LoadScore(HighScoreList[] data)
         {
             if (File.Exists("scores.txt"))
-                {
+            {
                 String[] lines = System.IO.File.ReadAllLines("scores.txt");
                 if (lines.Length > 0)
                 {
-                    String data = lines[0].ToString();
-                    String[] temp = data.Split(";");
-                    highScoreName = temp[0];
-                    highScore = Convert.ToInt32(temp[1]);
+                    for (int i = 0; i < highScore.Length; i++)
+                    {
+                        String data2 = lines[i].ToString();
+                        String[] temp = data2.Split(";");
+                        data[i].name = temp[0];
+                        data[i].score = Convert.ToInt32(temp[1]);
+                    }
                 }
             }
+        }
+        public static void SortScore(HighScoreList[] data)
+        {
+
+            for (int i = 1; i < data.Length; i++)
+            {
+                for (int j = i; j > 0; j--)
+                {
+                    if (data[j].score > data[j - 1].score)
+                    {
+                        HighScoreList tmp = data[j - 1];
+                        data[j - 1] = data[j];
+                        data[j] = tmp;
+                    }
+                    else
+                        break;
+                }
+            }
+        }     
+    
+    static void Main(string[] args)
+        {
+            for (int i = 0; i < highScore.Length; i++)
+            {
+                highScore[i] = new HighScoreList();
+            }
+            LoadScore(highScore);                       
             Console.CursorVisible = false;
             GameMenu myGame = new GameMenu();
             myGame.Start();
@@ -977,7 +1025,13 @@ namespace Snake
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("High Score List:");
-                Console.WriteLine($"{highScoreName} {highScore}");
+                Console.WriteLine("No. "+"{0,-20} {1,5}\n", "Name", "Score");
+                for (int i = 0; i < highScore.Length; i++)
+                {
+                    Console.WriteLine(i+1+"   "+"{0,-20} {1,5:N1}", highScore[i].name, highScore[i].score.ToString());
+                    if (i % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    else Console.ResetColor();
+                }
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Black;
