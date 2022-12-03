@@ -1219,7 +1219,10 @@ namespace Snake
                 Console.WriteLine("Right-Arrow: Move right");
                 Console.WriteLine("Left-Arrow:  Move left");
                 Console.WriteLine("Spacebar:    Shoot!");
-                Console.WriteLine();
+                Console.WriteLine("@ is a wall, special color wall can be blown up with some shots");
+                Console.WriteLine("* is an apple (eat it)");
+                Console.WriteLine("M is a monster (avoid)");
+                Console.WriteLine("B is a boss (avoid)");
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.WriteLine("<< * Back to main menu >>", Console.BackgroundColor);
