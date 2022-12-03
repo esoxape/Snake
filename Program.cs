@@ -388,13 +388,14 @@ namespace Snake
             int counter = 0;
         gogogo:
             counter++;
-            if (counter < 30)
+            if (counter < 32)
             {
                 for (int i = 0; i < board.GetLength(0); i++)
                 {
-                    int random = rand.Next(2);                                            
-                    if (random == 1)boardBoom[i,counter] = Snake.Explosion1;
-                    if (random == 1)boardBoom[i, board.GetLength(1)-counter] = Snake.Explosion1;                    
+                    for(int j = 0; j < board.GetLength(1); j++)
+                    {
+                        if (board[i,j]==Snake.Head || board[i, j] == Snake.Body && boardBoom[i,j] !=Snake.Explosion2)boardBoom[i,j] = Snake.Explosion1;
+                    }               
                 }
             }
             Console.Clear();
@@ -545,6 +546,7 @@ namespace Snake
         public static void Score()
         {
             activeBullets.Clear();
+            mySnake.positions.Clear();
             ammo = 0;
             active = false;
             if (score > highScore[9].score)
@@ -559,8 +561,7 @@ namespace Snake
                     file.WriteLine(line);
                 }
                 file.Close();
-            }            
-            mySnake.positions.Clear();
+            }      
             Console.WriteLine();
             EndGame();
             Console.WriteLine();
